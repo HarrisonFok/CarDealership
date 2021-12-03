@@ -103,7 +103,7 @@ public class ControllerAdmin {
     public ResponseEntity update(@PathVariable int userId, 
             @RequestBody User user) {
         ResponseEntity response = new ResponseEntity(HttpStatus.NOT_FOUND);
-        if(userId != user.getId()) {
+        if(userId != user.getUserID()) {
             response = new ResponseEntity(HttpStatus.UNPROCESSABLE_ENTITY);
         } else if (daoUsers.updateUser(user)) {
             response = new ResponseEntity(HttpStatus.NO_CONTENT);
@@ -114,7 +114,7 @@ public class ControllerAdmin {
     @PostMapping("/changePassword")
     public String changePassword(int userId, String password){
         User user = daoUsers.getUser(userId);
-        user.setPasswrod(password);
+        user.setUserPassword(password);
         daoUsers.updateUserPassword(user);
         return "Password changed";
     }
@@ -184,7 +184,7 @@ public class ControllerAdmin {
     public ResponseEntity update(@PathVariable int vehicleId, 
             @RequestBody Vehicle vehicle) {
         ResponseEntity response = new ResponseEntity(HttpStatus.NOT_FOUND);
-        if(vehicleId != vehicle.getId()) {
+        if(vehicleId != vehicle.getVehicleID()) {
             response = new ResponseEntity(HttpStatus.UNPROCESSABLE_ENTITY);
         } else if (daoVehicle.updateVehicle(vehicle)) {
             response = new ResponseEntity(HttpStatus.NO_CONTENT);
