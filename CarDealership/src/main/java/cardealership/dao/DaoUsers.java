@@ -5,10 +5,21 @@
  */
 package cardealership.dao;
 
+import cardealership.dto.User;
+import java.util.List;
+
 /**
  *
  * @author Joshua Martel
  */
 public interface DaoUsers {
+    
+    public User addUser(User newUser);
+    
+    public boolean updateUser (User user);
+    
+    public boolean updateUserPassword(User user);
+    
+    public List<User> getAllUsers();
     
 }

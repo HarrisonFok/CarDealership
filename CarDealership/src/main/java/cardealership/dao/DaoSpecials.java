@@ -5,10 +5,18 @@
  */
 package cardealership.dao;
 
+import cardealership.dto.Special;
+
 /**
  *
  * @author Joshua Martel
  */
 public interface DaoSpecials {
+    
+    public Special addSpecial(Special sp);
+    
+    public boolean removeSpecial(int specialId);
+    
+    public Special getSpecial(int specialId);
     
 }

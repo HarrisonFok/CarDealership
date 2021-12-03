@@ -5,10 +5,19 @@
  */
 package cardealership.dao;
 
+import cardealership.dto.Model;
+import java.util.List;
+
 /**
  *
  * @author Joshua Martel
  */
 public interface DaoModel {
+    
+    public Model getModel(int modelId);
+    
+    public List<Model> getAllModels();
+    
+    public Model addModel(Model newModel);
     
 }

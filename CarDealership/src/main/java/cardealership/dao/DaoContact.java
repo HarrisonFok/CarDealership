@@ -5,10 +5,20 @@
  */
 package cardealership.dao;
 
+import cardealership.dto.Contact;
+import java.util.List;
+
 /**
  *
  * @author Joshua Martel
  */
 public interface DaoContact {
+    
+    public Contact addContact(Contact newContact);
+    
+    public List<Contact> getAllContacts();
+    
+    public boolean editContact(Contact newContact);
+    
     
 }

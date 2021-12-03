@@ -5,10 +5,18 @@
  */
 package cardealership.dao;
 
+import cardealership.dto.Make;
+import java.util.List;
+
 /**
  *
  * @author Joshua Martel
  */
 public interface DaoMake {
     
+    public Make getMake(int makeId);
+    
+    public List<Make> getAllMakes(); 
+    
+    public Make addMake(Make newMake);
 }
