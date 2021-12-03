@@ -22,4 +22,6 @@ public interface DaoSales {
 //    public List<Sale> getAllSalesForDate(LocalDate date);
     
     public Sale getSale(int saleId);
+    
+    
 }

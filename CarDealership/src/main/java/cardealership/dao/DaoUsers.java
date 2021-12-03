@@ -20,6 +20,8 @@ public interface DaoUsers {
     
     public boolean updateUserPassword(User user);
     
+    public User getUser(int userId);
+    
     public List<User> getAllUsers();
     
 }
