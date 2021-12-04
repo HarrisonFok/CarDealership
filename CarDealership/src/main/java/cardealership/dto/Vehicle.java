@@ -9,7 +9,7 @@ import java.util.Objects;
 public class Vehicle {
     
     private int vehicleID;
-    private String make;
+//    private String make;
     private String vehicleType;
     private String bodyStyle;
     private int vehicleYear;
@@ -22,7 +22,7 @@ public class Vehicle {
     private String vehicleDesc;
     private String salesStatus;
     private int specialID;
-    private int makeID;
+    private int modelID;
     
     public Vehicle(){
         
@@ -32,9 +32,9 @@ public class Vehicle {
         this.vehicleID = vehicleID;
     }
 
-    public Vehicle(int vehicleID, String make, String vehicleType, String bodyStyle, int vehicleYear, String transmission, String colour, int mileage, String vin, String msrp, String salesPrice, String vehicleDesc, String salesStatus, int specialID, int makeID) {
+    public Vehicle(int vehicleID, String make, String vehicleType, String bodyStyle, int vehicleYear, String transmission, String colour, int mileage, String vin, String msrp, String salesPrice, String vehicleDesc, String salesStatus, int specialID, int modelID) {
         this.vehicleID = vehicleID;
-        this.make = make;
+//        this.make = make;
         this.vehicleType = vehicleType;
         this.bodyStyle = bodyStyle;
         this.vehicleYear = vehicleYear;
@@ -47,7 +47,7 @@ public class Vehicle {
         this.vehicleDesc = vehicleDesc;
         this.salesStatus = salesStatus;
         this.specialID = specialID;
-        this.makeID = makeID;
+        this.modelID = modelID;
     }
 
     public int getVehicleID() {
@@ -58,13 +58,13 @@ public class Vehicle {
         this.vehicleID = vehicleID;
     }
 
-    public String getMake() {
-        return make;
-    }
-
-    public void setMake(String make) {
-        this.make = make;
-    }
+//    public String getMake() {
+//        return make;
+//    }
+//
+//    public void setMake(String make) {
+//        this.make = make;
+//    }
 
     public String getVehicleType() {
         return vehicleType;
@@ -162,19 +162,19 @@ public class Vehicle {
         this.specialID = specialID;
     }
 
-    public int getMakeID() {
-        return makeID;
+    public int getModelID() {
+        return modelID;
     }
 
-    public void setMakeID(int makeID) {
-        this.makeID = makeID;
+    public void setModelID(int modelID) {
+        this.modelID = modelID;
     }
 
     @Override
     public int hashCode() {
         int hash = 3;
         hash = 31 * hash + this.vehicleID;
-        hash = 31 * hash + Objects.hashCode(this.make);
+//        hash = 31 * hash + Objects.hashCode(this.make);
         hash = 31 * hash + Objects.hashCode(this.vehicleType);
         hash = 31 * hash + Objects.hashCode(this.bodyStyle);
         hash = 31 * hash + this.vehicleYear;
@@ -187,7 +187,7 @@ public class Vehicle {
         hash = 31 * hash + Objects.hashCode(this.vehicleDesc);
         hash = 31 * hash + Objects.hashCode(this.salesStatus);
         hash = 31 * hash + this.specialID;
-        hash = 31 * hash + this.makeID;
+        hash = 31 * hash + this.modelID;
         return hash;
     }
 
@@ -215,12 +215,12 @@ public class Vehicle {
         if (this.specialID != other.specialID) {
             return false;
         }
-        if (this.makeID != other.makeID) {
+        if (this.modelID != other.modelID) {
             return false;
         }
-        if (!Objects.equals(this.make, other.make)) {
-            return false;
-        }
+//        if (!Objects.equals(this.make, other.make)) {
+//            return false;
+//        }
         if (!Objects.equals(this.vehicleType, other.vehicleType)) {
             return false;
         }

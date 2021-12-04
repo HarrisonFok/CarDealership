@@ -12,6 +12,8 @@ import cardealership.dto.Sale;
 import cardealership.dto.Special;
 import cardealership.dto.User;
 import cardealership.dto.Vehicle;
+import java.math.BigDecimal;
+import java.time.LocalDate;
 import java.util.List;
 
 /**
@@ -63,8 +65,40 @@ public interface ServiceLayer {
     public List<Vehicle> getAllVehiclesForSale();
     
     //====Business-Logic Methods====
+    //Find sales between dates
+    //either-or start and end can be null
+    public List<Sale> getSalesInRange(LocalDate start, LocalDate end);
     
+    //Find sales between dates and associated with user
+    //either-or start and end can be null
+    public List<Sale> getSalesInRangeAndUser(LocalDate start, LocalDate end, User user);
     
+    //Search for sales related by user
+    public List<Sale> getSalesInByUser(User user);
     
+    //simply returns sum of sales given
+    public BigDecimal totalNumberOfSales(List<Sale> sales);
     
+    //WIll return a string with total number of vevicles sold,
+    // as well as how many of each model and make
+    public List<String> totalNumberOfVehiclesSold(List<Sale> sales);
+    
+    //cheks if purchase price is no less than 95% of sale price
+    // and purchase price is no larger than MSRP
+    public String checkIfValidPurchasePrice(Sale newSale, Vehicle boughtVehicle);
+    
+    public boolean validZip(Sale newSale);
+    
+    public boolean validYear(Vehicle addedVehicle);
+    
+    public boolean validTransmission(Vehicle addedVehicle);
+    
+    public boolean validNewVehicle(Vehicle newVehicle);
+    
+    public boolean validSalePrice(Vehicle newVehicle);
+    
+    //Checks that email is in a valid fotmat
+    public boolean validEmail(String email);
+//    public boolean validEmail(User newUser);
+//    public boolean validEmail(Sale newSale);
 }
