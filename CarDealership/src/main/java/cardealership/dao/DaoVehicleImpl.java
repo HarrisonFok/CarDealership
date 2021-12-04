@@ -46,6 +46,7 @@ public class DaoVehicleImpl implements DaoVehicle {
             pState.setString(12, newVehicle.getSalesStatus());
             pState.setInt(13, newVehicle.getSpecialID());
 //            pState.setInt(14, newVehicle.getMake());
+            
             return pState;
         }, key);
         
