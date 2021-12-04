@@ -14,8 +14,6 @@ import cardealership.dto.User;
 import cardealership.dto.Vehicle;
 import cardealership.servicelayer.ServiceLayerImpl;
 import java.time.LocalDate;
-import java.time.ZoneId;
-import java.util.Date;
 import java.util.List;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.annotation.ComponentScan;
@@ -35,7 +33,7 @@ import org.springframework.web.bind.annotation.RestController;
  * @author Joshua Martel
  */
 @RestController
-@RequestMapping("/dealership/admin")
+@RequestMapping("/dealership")
 @ComponentScan(basePackageClasses = ServiceLayerImpl.class)
 public class ControllerAdmin {
     
@@ -45,6 +43,37 @@ public class ControllerAdmin {
     public ControllerAdmin(ServiceLayerImpl service) {
         this.service = service;
     }
+    
+    
+    
+    /*
+    @Autowired
+    private final DaoContact daoContact;
+    @Autowired
+    private final DaoMake daoMake;
+    @Autowired
+    private final DaoModel daoModel;
+    @Autowired
+    private final DaoSales daoSales;
+    @Autowired
+    private final DaoSpecials daoSpecials;
+    @Autowired
+    private final DaoUsers daoUsers;
+    @Autowired
+    private final DaoVehicle daoVehicle;
+    
+    public ControllerAdmin(DaoContact daoContact, DaoMake daoMake,
+            DaoModel daoModel, DaoSales daoSales, DaoSpecials daoSpecials,
+            DaoUsers daoUsers, DaoVehicle daoVehicle){
+        this.daoContact = daoContact;
+        this.daoMake = daoMake;
+        this.daoModel = daoModel;
+        this.daoSales = daoSales;
+        this.daoSpecials = daoSpecials;
+        this.daoUsers = daoUsers;
+        this.daoVehicle = daoVehicle;
+    }
+    */
     
     @GetMapping("/getAllUsers")
     public List<User> getAllUsers(){
@@ -56,11 +85,10 @@ public class ControllerAdmin {
     public User addUser(String firsName, String lastName, String userName,
             String password, String role){
         User newUser = new User();
-        newUser.setFirstName(firsName);
-        newUser.setLastName(lastName);
-        newUser.setUserName(userName);
-        newUser.setUserPassword(password);
-        newUser.setUserRole(role);
+        //setters here
+        //*
+        //*
+        //*
         //return daoUsers.addUser(newUser);
         return service.addUser(newUser);
     }
@@ -117,12 +145,10 @@ public class ControllerAdmin {
     @PostMapping("/addSpecial")
     public Special addSpecial(LocalDate start, LocalDate end, String discount){
         Special newSpecial = new Special();
-        ZoneId defaultZoneId = ZoneId.systemDefault();
-        Date dateStart = Date.from(start.atStartOfDay(defaultZoneId).toInstant());
-        Date dateEnd = Date.from(end.atStartOfDay(defaultZoneId).toInstant());
-        newSpecial.setStartDate(dateStart);
-        newSpecial.setEndDate(dateEnd);
-        newSpecial.setDiscount(discount);
+        /////Setters
+        //
+        //
+        //
         //return daoSpecials.addSpecial(newSpecial);
         return service.addSpecial(newSpecial);
     }
