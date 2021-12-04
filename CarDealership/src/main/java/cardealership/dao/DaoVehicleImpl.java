@@ -23,13 +23,13 @@ public class DaoVehicleImpl implements DaoVehicle {
     @Override
     public Vehicle addVehicle(Vehicle newVehicle) {
         // Add a new vehicle into the vehicle table
-        final String sql = "INSERT INTO Vehicle(vehicleID, make, vehicleType, bodyStyle, vehicleYear, transmission, colour, mileage, vin, msrp, salesPrice, vehicleDesc, saleStatus, specialID, makeID) VALUES (?,?,?,?,?,?,?,?,?,?,?,?,?,?,?)";
+        final String sql = "INSERT INTO Vehicle( modelId, vehicleType, bodyStyle, vehicleYear, transmission, colour, mileage, vin, msrp, salesPrice, vehicleDesc, saleStatus, specialID) VALUES (?,?,?,?,?,?,?,?,?,?,?,?,?)";
         
         GeneratedKeyHolder key = new GeneratedKeyHolder();
         
         jdbc.update((Connection conn) -> {
             PreparedStatement pState = conn.prepareStatement(sql, Statement.RETURN_GENERATED_KEYS);
-            pState.setString(1, newVehicle.getMake());
+            pState.setInt(1, newVehicle.getModelID());
             pState.setString(2, newVehicle.getVehicleType());
             pState.setString(3, newVehicle.getBodyStyle());
             pState.setInt(4, newVehicle.getVehicleYear());
@@ -42,7 +42,7 @@ public class DaoVehicleImpl implements DaoVehicle {
             pState.setString(11, newVehicle.getVehicleDesc());
             pState.setString(12, newVehicle.getSalesStatus());
             pState.setInt(13, newVehicle.getSpecialID());
-            pState.setInt(14, newVehicle.getMakeID());
+//            pState.setInt(14, newVehicle.getMake());
             return pState;
         }, key);
         
@@ -78,7 +78,7 @@ public class DaoVehicleImpl implements DaoVehicle {
                 + "makeID = ?;";
         
         return jdbc.update(sql,
-                vehicle.getMake(),
+                vehicle.getModelID(),
                 vehicle.getVehicleType(),
                 vehicle.getBodyStyle(),
                 vehicle.getVehicleYear(),
@@ -90,8 +90,9 @@ public class DaoVehicleImpl implements DaoVehicle {
                 vehicle.getSalesPrice(),
                 vehicle.getVehicleDesc(),
                 vehicle.getSalesStatus(),
-                vehicle.getSpecialID(),
-                vehicle.getMakeID()) > 0;
+                vehicle.getSpecialID()) > 0;
+//        ,
+//                vehicle.getMakeID())
     }
 
     @Override

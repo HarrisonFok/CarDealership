@@ -7,20 +7,6 @@
 
 package cardealership.controller;
 
-import cardealership.dao.DaoContact;
-import cardealership.dao.DaoContactImpl;
-import cardealership.dao.DaoMake;
-import cardealership.dao.DaoMakeImpl;
-import cardealership.dao.DaoModel;
-import cardealership.dao.DaoModelImpl;
-import cardealership.dao.DaoSales;
-import cardealership.dao.DaoSalesImpl;
-import cardealership.dao.DaoSpecials;
-import cardealership.dao.DaoSpecialsImpl;
-import cardealership.dao.DaoUsers;
-import cardealership.dao.DaoUsersImpl;
-import cardealership.dao.DaoVehicle;
-import cardealership.dao.DaoVehicleImpl;
 import cardealership.dto.Make;
 import cardealership.dto.Model;
 import cardealership.dto.Special;
@@ -48,21 +34,17 @@ import org.springframework.web.bind.annotation.RestController;
  */
 @RestController
 @RequestMapping("/dealership")
-//@ComponentScan(basePackageClasses = DaoContactImpl.class)
-//@ComponentScan(basePackageClasses = DaoMakeImpl.class)
-//@ComponentScan(basePackageClasses = DaoModelImpl.class)
-//@ComponentScan(basePackageClasses = DaoSalesImpl.class)
-//@ComponentScan(basePackageClasses = DaoSpecialsImpl.class)
-//@ComponentScan(basePackageClasses = DaoUsersImpl.class)
-//@ComponentScan(basePackageClasses = DaoVehicleImpl.class)
 @ComponentScan(basePackageClasses = ServiceLayerImpl.class)
 public class ControllerAdmin {
     
+    @Autowired
     private ServiceLayerImpl service;
     
     public ControllerAdmin(ServiceLayerImpl service) {
         this.service = service;
     }
+    
+    
     
     /*
     @Autowired
@@ -183,13 +165,13 @@ public class ControllerAdmin {
     //=====Reports methods=====
     
     @PostMapping("addVehicle")
-    public Vehicle addVehicle(String make, String vehicleType, String bodyStyle,
+    public Vehicle addVehicle(int modelId, String vehicleType, String bodyStyle,
             int vehicleYear,String transmission, String colour, int mileage, String vin, 
-            String msrp, String salesPrice, String vehicleDesc, String saleStatus){
+            String msrp, String salesPrice, String vehicleDesc, String saleStatus, int specialId){
         
         Vehicle newVehicle = new Vehicle();
         
-        newVehicle.setMake(make);
+        newVehicle.setModelID(modelId);
         newVehicle.setVehicleType(vehicleType);
         newVehicle.setBodyStyle(bodyStyle);
         newVehicle.setVehicleYear(vehicleYear);
@@ -201,6 +183,8 @@ public class ControllerAdmin {
         newVehicle.setSalesPrice(salesPrice);
         newVehicle.setVehicleDesc(vehicleDesc);
         newVehicle.setSalesPrice(saleStatus);
+        newVehicle.setSpecialID(specialId);
+        
         
         //return daoVehicle.addVehicle(newVehicle);
         return service.addVehicle(newVehicle);
