@@ -1,5 +1,7 @@
 package cardealership.dto;
 
+import java.time.LocalDate;
+import java.util.Date;
 import java.util.Objects;
 
 /**
@@ -17,8 +19,13 @@ public class Sale {
     private String purchaseType;
     private int userID;
     private int vehicleID;
+    private LocalDate saleDate;
+    
+    public Sale(){
+        
+    }
 
-    public Sale(int saleID, String email, String phone, String street, int zipCode, String purchasePrice, String purchaseType, int userID, int vehicleID) {
+    public Sale(int saleID, String email, String phone, String street, int zipCode, String purchasePrice, String purchaseType, int userID, int vehicleID, LocalDate saleDate) {
         this.saleID = saleID;
         this.email = email;
         this.phone = phone;
@@ -28,6 +35,7 @@ public class Sale {
         this.purchaseType = purchaseType;
         this.userID = userID;
         this.vehicleID = vehicleID;
+        this.saleDate = saleDate;
     }
 
     public int getSaleID() {
@@ -101,19 +109,28 @@ public class Sale {
     public void setVehicleID(int vehicleID) {
         this.vehicleID = vehicleID;
     }
+    
+    public LocalDate getSaleDate(){
+        return saleDate;
+    }
+    
+    public void setSaleDate(LocalDate saleDate){
+        this.saleDate = saleDate;
+    }
 
     @Override
     public int hashCode() {
-        int hash = 3;
-        hash = 53 * hash + this.saleID;
-        hash = 53 * hash + Objects.hashCode(this.email);
-        hash = 53 * hash + Objects.hashCode(this.phone);
-        hash = 53 * hash + Objects.hashCode(this.street);
-        hash = 53 * hash + this.zipCode;
-        hash = 53 * hash + Objects.hashCode(this.purchasePrice);
-        hash = 53 * hash + Objects.hashCode(this.purchaseType);
-        hash = 53 * hash + this.userID;
-        hash = 53 * hash + this.vehicleID;
+        int hash = 7;
+        hash = 67 * hash + this.saleID;
+        hash = 67 * hash + Objects.hashCode(this.email);
+        hash = 67 * hash + Objects.hashCode(this.phone);
+        hash = 67 * hash + Objects.hashCode(this.street);
+        hash = 67 * hash + this.zipCode;
+        hash = 67 * hash + Objects.hashCode(this.purchasePrice);
+        hash = 67 * hash + Objects.hashCode(this.purchaseType);
+        hash = 67 * hash + this.userID;
+        hash = 67 * hash + this.vehicleID;
+        hash = 67 * hash + Objects.hashCode(this.saleDate);
         return hash;
     }
 
@@ -156,8 +173,20 @@ public class Sale {
         if (!Objects.equals(this.purchaseType, other.purchaseType)) {
             return false;
         }
+        if (!Objects.equals(this.saleDate, other.saleDate)) {
+            return false;
+        }
         return true;
     }
+
+    @Override
+    public String toString() {
+        return "Sale{" + "saleID=" + saleID + ", email=" + email + ", phone=" + phone + ", street=" + street + ", zipCode=" + zipCode + ", purchasePrice=" + purchasePrice + ", purchaseType=" + purchaseType + ", userID=" + userID + ", vehicleID=" + vehicleID + ", saleDate=" + saleDate + '}';
+    }
+
+    
+
+    
     
     
 }
