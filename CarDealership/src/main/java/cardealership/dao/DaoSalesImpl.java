@@ -2,6 +2,7 @@ package cardealership.dao;
 
 import cardealership.dto.Sale;
 import java.sql.Connection;
+import java.sql.Date;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
@@ -25,8 +26,8 @@ public class DaoSalesImpl implements DaoSales {
 
     @Override
     public Sale addSale(Sale newSale) {
-        // SQL statement to add a sale to the Sales table
-        final String sql = "INSERT INTO Sales(email, phone, street, zipCode, purchasePrice, purchaseType, userID, vehicleID) VALUES (?,?,?,?,?,?,?,?)";
+        // Add a sale
+        final String sql = "INSERT INTO Sales(email, phone, street, zipCode, purchasePrice, purchaseType, userID, vehicleID, saleDate) VALUES (?,?,?,?,?,?,?,?,?)";
         
         GeneratedKeyHolder key = new GeneratedKeyHolder();
         
@@ -41,6 +42,7 @@ public class DaoSalesImpl implements DaoSales {
             pState.setString(6, newSale.getPurchaseType());
             pState.setInt(7, newSale.getUserID());
             pState.setInt(8, newSale.getVehicleID());
+            pState.setDate(9, Date.valueOf(newSale.getSaleDate()) );
             
             return pState;
         }, key);
@@ -53,14 +55,14 @@ public class DaoSalesImpl implements DaoSales {
     @Override
     public List<Sale> getAllSales() {
         // SQL statement that selects all the sales from the Sales table
-        final String sql = "SELECT saleID, email, phone, street, zipCode, purchasePrice, purchaseType, userID, vehicleID FROM Sales";
+        final String sql = "SELECT saleID, email, phone, street, zipCode, purchasePrice, purchaseType, userID, vehicleID, saleDate FROM Sales";
         return jdbc.query(sql, new SalesMapper());
     }
 
     @Override
     public Sale getSale(int saleId) {
         // SQL statement that selects a single sale from the Sales table
-        final String sql = "SELECT saleID, email, phone, street, zipCode, purchasePrice, purchaseType, userID, vehicleID FROM Sales WHERE saleID = ?";
+        final String sql = "SELECT saleID, email, phone, street, zipCode, purchasePrice, purchaseType, userID, vehicleID, saleDate FROM Sales WHERE saleID = ?";
         return jdbc.queryForObject(sql, new SalesMapper(), saleId);
     }
     
@@ -77,6 +79,7 @@ public class DaoSalesImpl implements DaoSales {
             sale.setPurchaseType(rs.getString("purchaseType"));
             sale.setUserID(rs.getInt("userID"));
             sale.setVehicleID(rs.getInt("vehicleID"));
+            sale.setSaleDate(rs.getDate("saleDate").toLocalDate());
             return sale;
         }
         

@@ -3,10 +3,13 @@ package cardealership.dao;
 import cardealership.dto.Vehicle;
 import java.sql.Connection;
 import java.sql.PreparedStatement;
+import java.sql.ResultSet;
+import java.sql.SQLException;
 import java.sql.Statement;
 import java.util.List;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.jdbc.core.JdbcTemplate;
+import org.springframework.jdbc.core.RowMapper;
 import org.springframework.jdbc.support.GeneratedKeyHolder;
 import org.springframework.stereotype.Repository;
 
@@ -23,13 +26,13 @@ public class DaoVehicleImpl implements DaoVehicle {
     @Override
     public Vehicle addVehicle(Vehicle newVehicle) {
         // Add a new vehicle into the vehicle table
-        final String sql = "INSERT INTO Vehicle(vehicleID, make, vehicleType, bodyStyle, vehicleYear, transmission, colour, mileage, vin, msrp, salesPrice, vehicleDesc, saleStatus, specialID, makeID) VALUES (?,?,?,?,?,?,?,?,?,?,?,?,?,?,?)";
+        final String sql = "INSERT INTO Vehicle( modelId, vehicleType, bodyStyle, vehicleYear, transmission, colour, mileage, vin, msrp, salesPrice, vehicleDesc, saleStatus, specialID) VALUES (?,?,?,?,?,?,?,?,?,?,?,?,?)";
         
         GeneratedKeyHolder key = new GeneratedKeyHolder();
         
         jdbc.update((Connection conn) -> {
             PreparedStatement pState = conn.prepareStatement(sql, Statement.RETURN_GENERATED_KEYS);
-            pState.setString(1, newVehicle.getMake());
+            pState.setInt(1, newVehicle.getModelID());
             pState.setString(2, newVehicle.getVehicleType());
             pState.setString(3, newVehicle.getBodyStyle());
             pState.setInt(4, newVehicle.getVehicleYear());
@@ -42,7 +45,8 @@ public class DaoVehicleImpl implements DaoVehicle {
             pState.setString(11, newVehicle.getVehicleDesc());
             pState.setString(12, newVehicle.getSalesStatus());
             pState.setInt(13, newVehicle.getSpecialID());
-            pState.setInt(14, newVehicle.getMakeID());
+//            pState.setInt(14, newVehicle.getMake());
+            
             return pState;
         }, key);
         
@@ -62,7 +66,6 @@ public class DaoVehicleImpl implements DaoVehicle {
     public boolean updateVehicle(Vehicle vehicle) {
         // Update a vehicle in the Vehicle table
         final String sql = "UPDATE Vehicle SET "
-                + "make = ?, "
                 + "vehicleType = ?, "
                 + "bodyStyle = ?, "
                 + "vehicleYear = ?, "
@@ -75,10 +78,10 @@ public class DaoVehicleImpl implements DaoVehicle {
                 + "vehicleDesc = ?, "
                 + "salesStatus = ?, "
                 + "specialID = ?, "
-                + "makeID = ?;";
+                + "modelID = ?;";
         
         return jdbc.update(sql,
-                vehicle.getMake(),
+                vehicle.getModelID(),
                 vehicle.getVehicleType(),
                 vehicle.getBodyStyle(),
                 vehicle.getVehicleYear(),
@@ -90,8 +93,15 @@ public class DaoVehicleImpl implements DaoVehicle {
                 vehicle.getSalesPrice(),
                 vehicle.getVehicleDesc(),
                 vehicle.getSalesStatus(),
-                vehicle.getSpecialID(),
-                vehicle.getMakeID()) > 0;
+                vehicle.getSpecialID()) > 0;
+//        ,
+//                vehicle.getMakeID())
+    }
+    
+    @Override
+    public Vehicle getVehicle(int vehicleId){
+        final String GET_VEHICLE = "SELECT * FROM vehicle WHERE vehicleID = ?";
+        return jdbc.queryForObject(GET_VEHICLE, new VehicleMapper(), vehicleId);
     }
 
     @Override
@@ -119,5 +129,25 @@ public class DaoVehicleImpl implements DaoVehicle {
         throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
     }
     
-    
+    public static final class VehicleMapper implements RowMapper<Vehicle>{
+
+        @Override
+        public Vehicle mapRow(ResultSet rs, int index) throws SQLException{
+           Vehicle vec = new Vehicle();
+           vec.setBodyStyle(rs.getString("bodyStyle"));
+           vec.setVehicleYear(rs.getInt("vehicleYear"));
+           vec.setTransmission(rs.getString("transmission"));
+           vec.setColour(rs.getString("colour"));
+           vec.setMileage(rs.getInt("mileage"));
+           vec.setVin(rs.getString("vin"));
+           vec.setMsrp(rs.getString("msrp"));
+           vec.setSalesPrice(rs.getNString("salesPrice"));
+           vec.setVehicleDesc(rs.getString("vehicleDesc"));
+           vec.setSalesStatus(rs.getString("salesStatus"));
+           vec.setSpecialID(rs.getInt("specialID"));
+           vec.setModelID(rs.getInt("modelID"));
+           return vec;
+        }
+        
+    }
 }

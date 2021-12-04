@@ -15,7 +15,7 @@ public class Contact {
     private String phone;
     private int vehicleID;
     
-    public Contact() {
+    public Contact(){
         
     }
     
