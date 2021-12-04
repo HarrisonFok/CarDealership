@@ -26,6 +26,7 @@ import cardealership.dto.Model;
 import cardealership.dto.Special;
 import cardealership.dto.User;
 import cardealership.dto.Vehicle;
+import cardealership.servicelayer.ServiceLayerImpl;
 import java.time.LocalDate;
 import java.util.List;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -46,16 +47,24 @@ import org.springframework.web.bind.annotation.RestController;
  * @author Joshua Martel
  */
 @RestController
-@RequestMapping("/dealership") //gtn stands for "Guess The Number"
-@ComponentScan(basePackageClasses = DaoContactImpl.class)
-@ComponentScan(basePackageClasses = DaoMakeImpl.class)
-@ComponentScan(basePackageClasses = DaoModelImpl.class)
-@ComponentScan(basePackageClasses = DaoSalesImpl.class)
-@ComponentScan(basePackageClasses = DaoSpecialsImpl.class)
-@ComponentScan(basePackageClasses = DaoUsersImpl.class)
-@ComponentScan(basePackageClasses = DaoVehicleImpl.class)
+@RequestMapping("/dealership")
+//@ComponentScan(basePackageClasses = DaoContactImpl.class)
+//@ComponentScan(basePackageClasses = DaoMakeImpl.class)
+//@ComponentScan(basePackageClasses = DaoModelImpl.class)
+//@ComponentScan(basePackageClasses = DaoSalesImpl.class)
+//@ComponentScan(basePackageClasses = DaoSpecialsImpl.class)
+//@ComponentScan(basePackageClasses = DaoUsersImpl.class)
+//@ComponentScan(basePackageClasses = DaoVehicleImpl.class)
+@ComponentScan(basePackageClasses = ServiceLayerImpl.class)
 public class ControllerAdmin {
     
+    private ServiceLayerImpl service;
+    
+    public ControllerAdmin(ServiceLayerImpl service) {
+        this.service = service;
+    }
+    
+    /*
     @Autowired
     private final DaoContact daoContact;
     @Autowired
@@ -82,10 +91,12 @@ public class ControllerAdmin {
         this.daoUsers = daoUsers;
         this.daoVehicle = daoVehicle;
     }
+    */
     
     @GetMapping("/getAllUsers")
     public List<User> getAllUsers(){
-        return daoUsers.getAllUsers();
+        //return daoUsers.getAllUsers();
+        return service.getAllUsers();
     }
     
     @PostMapping("/addUser")
@@ -96,7 +107,8 @@ public class ControllerAdmin {
         //*
         //*
         //*
-        return daoUsers.addUser(newUser);
+        //return daoUsers.addUser(newUser);
+        return service.addUser(newUser);
     }
     
     @PutMapping("editUser/{id}")
@@ -105,7 +117,8 @@ public class ControllerAdmin {
         ResponseEntity response = new ResponseEntity(HttpStatus.NOT_FOUND);
         if(userId != user.getUserID()) {
             response = new ResponseEntity(HttpStatus.UNPROCESSABLE_ENTITY);
-        } else if (daoUsers.updateUser(user)) {
+        //} else if (daoUsers.updateUser(user)) {
+        } else if (service.updateUser(user)) {
             response = new ResponseEntity(HttpStatus.NO_CONTENT);
         }
         return response;
@@ -113,9 +126,11 @@ public class ControllerAdmin {
     
     @PostMapping("/changePassword")
     public String changePassword(int userId, String password){
-        User user = daoUsers.getUser(userId);
+        //User user = daoUsers.getUser(userId);
+        User user = service.getUser(userId);
         user.setUserPassword(password);
-        daoUsers.updateUserPassword(user);
+        //daoUsers.updateUserPassword(user);
+        service.updateUserPassword(user);
         return "Password changed";
     }
     
@@ -127,7 +142,8 @@ public class ControllerAdmin {
         
         newMake.setModelID(modelId);
         newMake.setVehicleMake(make);
-        return daoMake.addMake(newMake);
+        //return daoMake.addMake(newMake);
+        return service.addMake(newMake);
     }
     
     //====Model Methods====
@@ -138,7 +154,8 @@ public class ControllerAdmin {
         Model newModel = new Model();
         newModel.setVehicleModel(model);
 
-        return daoModel.addModel(newModel);
+        //return daoModel.addModel(newModel);
+        return service.addModel(newModel);
     }
     
     //=====Specials Methods =====
@@ -150,12 +167,14 @@ public class ControllerAdmin {
         //
         //
         //
-        return daoSpecials.addSpecial(newSpecial);
+        //return daoSpecials.addSpecial(newSpecial);
+        return service.addSpecial(newSpecial);
     }
     
     @DeleteMapping("/removeSpecial/{id}")
     public ResponseEntity<Special> delete(@PathVariable int id) {
-        if(daoSpecials.removeSpecial(id)) {
+        //if(daoSpecials.removeSpecial(id)) {
+        if(service.removeSpecial(id)) {
             return new ResponseEntity(HttpStatus.NO_CONTENT);
         }
         return new ResponseEntity(HttpStatus.NOT_FOUND);
@@ -163,21 +182,28 @@ public class ControllerAdmin {
     
     //=====Reports methods=====
     
-    
-    
-    
-    @PostMapping("/addVehicle")
+    @PostMapping("addVehicle")
     public Vehicle addVehicle(String make, String vehicleType, String bodyStyle,
             int vehicleYear,String transmission, String colour, int mileage, String vin, 
             String msrp, String salesPrice, String vehicleDesc, String saleStatus){
+        
         Vehicle newVehicle = new Vehicle();
         
-        //setters here
-        //*
-        //*
-        //*
+        newVehicle.setMake(make);
+        newVehicle.setVehicleType(vehicleType);
+        newVehicle.setBodyStyle(bodyStyle);
+        newVehicle.setVehicleYear(vehicleYear);
+        newVehicle.setTransmission(transmission);
+        newVehicle.setColour(colour);
+        newVehicle.setMileage(mileage);
+        newVehicle.setVin(vin);
+        newVehicle.setMsrp(msrp);
+        newVehicle.setSalesPrice(salesPrice);
+        newVehicle.setVehicleDesc(vehicleDesc);
+        newVehicle.setSalesPrice(saleStatus);
         
-        return daoVehicle.addVehicle(newVehicle);
+        //return daoVehicle.addVehicle(newVehicle);
+        return service.addVehicle(newVehicle);
     }
     
     @PutMapping("editVehicle/{id}")
@@ -186,30 +212,40 @@ public class ControllerAdmin {
         ResponseEntity response = new ResponseEntity(HttpStatus.NOT_FOUND);
         if(vehicleId != vehicle.getVehicleID()) {
             response = new ResponseEntity(HttpStatus.UNPROCESSABLE_ENTITY);
-        } else if (daoVehicle.updateVehicle(vehicle)) {
+        //} else if (daoVehicle.updateVehicle(vehicle)) {
+        } else if (service.updateVehicle(vehicle)) {
             response = new ResponseEntity(HttpStatus.NO_CONTENT);
         }
         return response;
     }
     
+    @PutMapping("remoVehicle/{id}")
+    public boolean removeVehicle(@PathVariable int vehicleId) {
+        return service.removeVehicle(vehicleId);
+    }
+    
     @GetMapping("/getVehiclesSold")
     public List<Vehicle> getAllVehiclesSold(){
-        return daoVehicle.getAllVehiclesSold();
+        //return daoVehicle.getAllVehiclesSold();
+        return service.getAllVehiclesSold();
     }
     
     @GetMapping("/getAllUsedVehicles")
     public List<Vehicle> getAllUsedVehicles(){
-        return daoVehicle.getUsedVehicles();
+        //return daoVehicle.getUsedVehicles();
+        return service.getUsedVehicles();
     }
     
     @GetMapping("/getAllNewVehicles")
     public List<Vehicle> getAllNewVehicles(){
-        return daoVehicle.getNewVehicles();
+        //return daoVehicle.getNewVehicles();
+        return service.getNewVehicles();
     }
     
     @GetMapping("/getAllNewVehicles/MSRP")
     public List<Vehicle> getAllNewVehiclesByMSRP(){
-        return daoVehicle.getNewVehiclesByMSRP();
+        //return daoVehicle.getNewVehiclesByMSRP();
+        return service.getNewVehiclesByMSRP();
     }
     
 }

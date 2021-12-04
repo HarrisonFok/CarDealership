@@ -8,11 +8,13 @@ import java.util.List;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.jdbc.core.JdbcTemplate;
 import org.springframework.jdbc.support.GeneratedKeyHolder;
+import org.springframework.stereotype.Repository;
 
 /**
  *
  * @author Harrison Fok
  */
+@Repository
 public class DaoVehicleImpl implements DaoVehicle {
     
     @Autowired

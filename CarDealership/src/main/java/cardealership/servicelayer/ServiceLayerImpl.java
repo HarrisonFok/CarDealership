@@ -7,6 +7,20 @@
 
 package cardealership.servicelayer;
 
+import cardealership.dao.DaoContact;
+import cardealership.dao.DaoContactImpl;
+import cardealership.dao.DaoMake;
+import cardealership.dao.DaoMakeImpl;
+import cardealership.dao.DaoModel;
+import cardealership.dao.DaoModelImpl;
+import cardealership.dao.DaoSales;
+import cardealership.dao.DaoSalesImpl;
+import cardealership.dao.DaoSpecials;
+import cardealership.dao.DaoSpecialsImpl;
+import cardealership.dao.DaoUsers;
+import cardealership.dao.DaoUsersImpl;
+import cardealership.dao.DaoVehicle;
+import cardealership.dao.DaoVehicleImpl;
 import cardealership.dto.Contact;
 import cardealership.dto.Make;
 import cardealership.dto.Model;
@@ -15,12 +29,42 @@ import cardealership.dto.Special;
 import cardealership.dto.User;
 import cardealership.dto.Vehicle;
 import java.util.List;
+import org.springframework.context.annotation.ComponentScan;
+import org.springframework.stereotype.Service;
 
 /**
  *
  * @author Joshua Martel
  */
+@Service
+@ComponentScan(basePackageClasses = DaoContactImpl.class)
+@ComponentScan(basePackageClasses = DaoMakeImpl.class)
+@ComponentScan(basePackageClasses = DaoModelImpl.class)
+@ComponentScan(basePackageClasses = DaoSalesImpl.class)
+@ComponentScan(basePackageClasses = DaoSpecialsImpl.class)
+@ComponentScan(basePackageClasses = DaoUsersImpl.class)
+@ComponentScan(basePackageClasses = DaoVehicleImpl.class)
 public class ServiceLayerImpl implements ServiceLayer {
+    
+    private DaoContact daoContact;
+    private DaoMake daoMake;
+    private DaoModel daoModel;
+    private DaoSales daoSales;
+    private DaoSpecials daoSpecials;
+    private DaoUsers daoUsers;
+    private DaoVehicle daoVehicle;
+    
+    public ServiceLayerImpl(DaoContact daoContact, DaoMake daoMake,
+            DaoModel daoModel, DaoSales daoSales, DaoSpecials daoSpecials,
+            DaoUsers daoUsers, DaoVehicle daoVehicle){
+        this.daoContact = daoContact;
+        this.daoMake = daoMake;
+        this.daoModel = daoModel;
+        this.daoSales = daoSales;
+        this.daoSpecials = daoSpecials;
+        this.daoUsers = daoUsers;
+        this.daoVehicle = daoVehicle;
+    }
 
     @Override
     public Contact addContact(Contact newContact) {
@@ -124,17 +168,17 @@ public class ServiceLayerImpl implements ServiceLayer {
 
     @Override
     public Vehicle addVehicle(Vehicle newVehicle) {
-        throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
+        return daoVehicle.addVehicle(newVehicle);
     }
 
     @Override
     public boolean removeVehicle(int vehicleId) {
-        throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
+        return daoVehicle.removeVehicle(vehicleId);
     }
 
     @Override
     public boolean updateVehicle(Vehicle vehicle) {
-        throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
+        return daoVehicle.updateVehicle(vehicle);
     }
 
     @Override
