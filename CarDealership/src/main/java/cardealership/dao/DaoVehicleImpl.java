@@ -3,10 +3,13 @@ package cardealership.dao;
 import cardealership.dto.Vehicle;
 import java.sql.Connection;
 import java.sql.PreparedStatement;
+import java.sql.ResultSet;
+import java.sql.SQLException;
 import java.sql.Statement;
 import java.util.List;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.jdbc.core.JdbcTemplate;
+import org.springframework.jdbc.core.RowMapper;
 import org.springframework.jdbc.support.GeneratedKeyHolder;
 import org.springframework.stereotype.Repository;
 
@@ -62,7 +65,6 @@ public class DaoVehicleImpl implements DaoVehicle {
     public boolean updateVehicle(Vehicle vehicle) {
         // Update a vehicle in the Vehicle table
         final String sql = "UPDATE Vehicle SET "
-                + "make = ?, "
                 + "vehicleType = ?, "
                 + "bodyStyle = ?, "
                 + "vehicleYear = ?, "
@@ -75,7 +77,7 @@ public class DaoVehicleImpl implements DaoVehicle {
                 + "vehicleDesc = ?, "
                 + "salesStatus = ?, "
                 + "specialID = ?, "
-                + "makeID = ?;";
+                + "modelID = ?;";
         
         return jdbc.update(sql,
                 vehicle.getModelID(),
@@ -93,6 +95,12 @@ public class DaoVehicleImpl implements DaoVehicle {
                 vehicle.getSpecialID()) > 0;
 //        ,
 //                vehicle.getMakeID())
+    }
+    
+    @Override
+    public Vehicle getVehicle(int vehicleId){
+        final String GET_VEHICLE = "SELECT * FROM vehicle WHERE vehicleID = ?";
+        return jdbc.queryForObject(GET_VEHICLE, new VehicleMapper(), vehicleId);
     }
 
     @Override
@@ -120,5 +128,25 @@ public class DaoVehicleImpl implements DaoVehicle {
         throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
     }
     
-    
+    public static final class VehicleMapper implements RowMapper<Vehicle>{
+
+        @Override
+        public Vehicle mapRow(ResultSet rs, int index) throws SQLException{
+           Vehicle vec = new Vehicle();
+           vec.setBodyStyle(rs.getString("bodyStyle"));
+           vec.setVehicleYear(rs.getInt("vehicleYear"));
+           vec.setTransmission(rs.getString("transmission"));
+           vec.setColour(rs.getString("colour"));
+           vec.setMileage(rs.getInt("mileage"));
+           vec.setVin(rs.getString("vin"));
+           vec.setMsrp(rs.getString("msrp"));
+           vec.setSalesPrice(rs.getNString("salesPrice"));
+           vec.setVehicleDesc(rs.getString("vehicleDesc"));
+           vec.setSalesStatus(rs.getString("salesStatus"));
+           vec.setSpecialID(rs.getInt("specialID"));
+           vec.setModelID(rs.getInt("modelID"));
+           return vec;
+        }
+        
+    }
 }
