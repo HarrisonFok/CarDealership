@@ -17,6 +17,10 @@ public class Sale {
     private String purchaseType;
     private int userID;
     private int vehicleID;
+    
+    public Sale() {
+        
+    }
 
     public Sale(int saleID, String email, String phone, String street, int zipCode, String purchasePrice, String purchaseType, int userID, int vehicleID) {
         this.saleID = saleID;

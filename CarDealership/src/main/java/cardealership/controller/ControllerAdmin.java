@@ -187,6 +187,8 @@ public class ControllerAdmin {
             int vehicleYear,String transmission, String colour, int mileage, String vin, 
             String msrp, String salesPrice, String vehicleDesc, String saleStatus){
         
+        System.out.println("HI");
+        
         Vehicle newVehicle = new Vehicle();
         
         newVehicle.setMake(make);

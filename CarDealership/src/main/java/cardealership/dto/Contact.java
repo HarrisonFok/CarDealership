@@ -15,6 +15,10 @@ public class Contact {
     private String phone;
     private int vehicleID;
     
+    public Contact() {
+        
+    }
+    
     public Contact(String contactName) {
         this.contactName = contactName;
     }
