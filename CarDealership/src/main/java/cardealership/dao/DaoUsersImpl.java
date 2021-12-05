@@ -44,11 +44,10 @@ public class DaoUsersImpl implements DaoUsers {
 
     @Override
     public boolean updateUser(User user) {
-        final String sql = "UPDATE Users SET"
-                + "firstName = ?"
-                + "lastName = ?"
-                + "userName = ?"
-                + "userRole = ?"
+        final String sql = "UPDATE Users SET firstName = ?"
+                + ", lastName = ?"
+                + ", userName = ?"
+                + ", userRole = ?"
                 + "WHERE userID = ?";
         return jdbc.update(sql, 
                 user.getFirstName(),

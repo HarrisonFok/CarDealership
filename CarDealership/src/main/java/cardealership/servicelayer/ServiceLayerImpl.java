@@ -391,7 +391,7 @@ public class ServiceLayerImpl implements ServiceLayer {
     @Override
     public boolean validTransmission(Vehicle addedVehicle){
         final String AUTO = "automatic";
-        final String MANUAL = "manul";
+        final String MANUAL = "manual";
         if(AUTO.equalsIgnoreCase(addedVehicle.getTransmission())){
             return true;
         }else if(MANUAL.equalsIgnoreCase(addedVehicle.getTransmission())){

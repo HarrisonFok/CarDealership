@@ -107,7 +107,7 @@ public class ControllerAdmin {
         return ResponseHandler.generateResponse("Successfully added user!", HttpStatus.OK, newUser);
     }
     
-    @PutMapping("editUser/{id}")
+    @PutMapping("editUser/{userId}")
     public ResponseEntity update(@PathVariable int userId,
             @RequestBody User user) {
         ResponseEntity response = new ResponseEntity(HttpStatus.NOT_FOUND);
@@ -133,7 +133,7 @@ public class ControllerAdmin {
     //====Make Methods====
     
     @PostMapping("/addMake")
-    public Make addMake(String make, int modelId){
+    public Make addMake(String make){
         Make newMake = new Make();
         
 //        newMake.setModelID(modelId);
@@ -146,10 +146,10 @@ public class ControllerAdmin {
     
     
     @PostMapping("/addModel")
-    public Model addModel(String model){
+    public Model addModel(String model, int makeId){
         Model newModel = new Model();
         newModel.setVehicleModel(model);
-
+        newModel.setMakeID(makeId);
         //return daoModel.addModel(newModel);
         return service.addModel(newModel);
     }
@@ -169,6 +169,7 @@ public class ControllerAdmin {
     @DeleteMapping("/removeSpecial/{id}")
     public ResponseEntity<Special> delete(@PathVariable int id) {
         //if(daoSpecials.removeSpecial(id)) {
+
         if(service.removeSpecial(id)) {
             return new ResponseEntity(HttpStatus.NO_CONTENT);
         }
@@ -186,7 +187,15 @@ public class ControllerAdmin {
         
         newVehicle.setModelID(modelId);
         newVehicle.setVehicleType(vehicleType);
+        if(!vehicleType.equalsIgnoreCase("new") && !vehicleType.equalsIgnoreCase("used")){
+            return ResponseHandler.generateResponse(
+                    "Error: Invalid body type, must be used or new", HttpStatus.MULTI_STATUS, null);
+        }
         newVehicle.setBodyStyle(bodyStyle);
+        if(!bodyStyle.equalsIgnoreCase("car") && !bodyStyle.equalsIgnoreCase("SUV") && !bodyStyle.equalsIgnoreCase("Truck") && !bodyStyle.equalsIgnoreCase("Van")){
+            return ResponseHandler.generateResponse(
+                    "Error: Invalid body style, must be car, SUV, truck, or van", HttpStatus.MULTI_STATUS, null);
+        }
         newVehicle.setVehicleYear(vehicleYear);
         if(!service.validYear(newVehicle)){
             return ResponseHandler.generateResponse(
@@ -200,6 +209,12 @@ public class ControllerAdmin {
         }
         
         newVehicle.setColour(colour);
+        if(!colour.equalsIgnoreCase("red") && !colour.equalsIgnoreCase("blue") && !colour.equalsIgnoreCase("black")
+                && !colour.equalsIgnoreCase("white") && !colour.equalsIgnoreCase("green")){
+            //colour must be one of 5 colours
+            return ResponseHandler.generateResponse(
+                    "Error: Invalid colour", HttpStatus.MULTI_STATUS, null);
+        }
         newVehicle.setMileage(mileage);
         if(newVehicle.getVehicleType().equalsIgnoreCase("new")){
             if(!service.validNewVehicle(newVehicle)){
@@ -209,12 +224,24 @@ public class ControllerAdmin {
             }
         }
         newVehicle.setVin(vin);
+        if(vin.isEmpty()){
+            return ResponseHandler.generateResponse(
+                    "Error: VIN cannot be empty", HttpStatus.MULTI_STATUS, null);
+        }
         newVehicle.setMsrp(msrp);
+        if(Integer.parseInt(msrp) < 1){
+            return ResponseHandler.generateResponse(
+                    "Error: MSRP must be a positive number", HttpStatus.MULTI_STATUS, null);
+        }
         newVehicle.setSalesPrice(salesPrice);
         if(!service.validSalePrice(newVehicle)){
             return ResponseHandler.generateResponse(
                 "Error: Sale price must be less than MSRP", 
                     HttpStatus.MULTI_STATUS, null); 
+        }
+        else if(Integer.parseInt(salesPrice) < 1){
+            return ResponseHandler.generateResponse(
+                    "Error: sales price must be a positive number", HttpStatus.MULTI_STATUS, null);
         }
         if(vehicleDesc == null || vehicleDesc.length() == 0){
             return ResponseHandler.generateResponse(

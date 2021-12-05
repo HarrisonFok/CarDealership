@@ -25,19 +25,19 @@ public class DaoMakeImpl implements DaoMake {
 
     @Override
     public Make getMake(int makeId) {
-        final String sql = "SELECT makeID, vehicleMake, modelID FROM Make WHERE makeID = ?";
+        final String sql = "SELECT makeID, vehicleMake FROM Make WHERE makeID = ?";
         return jdbc.queryForObject(sql, new MakeMapper(), makeId);
     }
 
     @Override
     public List<Make> getAllMakes() {
-       final String sql = "SELECT makeID, vehicleMake, modelID FROM Make";
+       final String sql = "SELECT makeID, vehicleMake FROM Make";
        return jdbc.query(sql, new MakeMapper());
     }
 
     @Override
     public Make addMake(Make newMake) {
-        final String sql = "INSERT INTO Make(makeID, vehicleMake, modelID) VALUES (?,?,?)";
+        final String sql = "INSERT INTO Make(vehicleMake) VALUES (?)";
         GeneratedKeyHolder key = new GeneratedKeyHolder();
         jdbc.update((Connection conn) -> {
             PreparedStatement pState = conn.prepareStatement(sql, Statement.RETURN_GENERATED_KEYS);

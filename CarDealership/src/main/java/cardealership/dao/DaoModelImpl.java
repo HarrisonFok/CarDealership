@@ -37,13 +37,13 @@ public class DaoModelImpl implements DaoModel {
 
     @Override
     public Model addModel(Model newModel) {
-        final String sql = "INSERT INTO Model(modelID, vehicleModel) VALUES (?,?)";
+        final String sql = "INSERT INTO Model(vehicleModel, makeId) VALUES (?,?)";
         GeneratedKeyHolder key = new GeneratedKeyHolder();
         jdbc.update((Connection conn) -> {
             PreparedStatement pState = conn.prepareStatement(sql, Statement.RETURN_GENERATED_KEYS);
             
             pState.setString(1, newModel.getVehicleModel());
-            
+            pState.setInt(2, newModel.getMakeID());
             return pState;
         }, key);
         newModel.setModelID(key.getKey().intValue());
