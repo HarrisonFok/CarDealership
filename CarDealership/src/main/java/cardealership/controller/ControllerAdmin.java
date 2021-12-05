@@ -125,7 +125,7 @@ public class ControllerAdmin {
     public Make addMake(String make, int modelId){
         Make newMake = new Make();
         
-        newMake.setModelID(modelId);
+//        newMake.setModelID(modelId);
         newMake.setVehicleMake(make);
         //return daoMake.addMake(newMake);
         return service.addMake(newMake);
@@ -245,9 +245,49 @@ public class ControllerAdmin {
 //        return service.addVehicle(newVehicle);
 //    }
     
+//    @PutMapping("editVehicle/{vehicleId}")
+//    public ResponseEntity update(@PathVariable int vehicleId, 
+//            @RequestBody Vehicle vehicle) {
+//        ResponseEntity response = new ResponseEntity(HttpStatus.NOT_FOUND);
+//        if(vehicleId != vehicle.getVehicleID()) {
+//            response = new ResponseEntity(HttpStatus.UNPROCESSABLE_ENTITY);
+//        //} else if (daoVehicle.updateVehicle(vehicle)) {
+//        } else if (service.updateVehicle(vehicle)) {
+//            response = new ResponseEntity(HttpStatus.NO_CONTENT);
+//        }
+//        return response;
+//    }
+    
     @PutMapping("editVehicle/{vehicleId}")
     public ResponseEntity update(@PathVariable int vehicleId, 
             @RequestBody Vehicle vehicle) {
+        if(!service.validYear(vehicle)){
+            return ResponseHandler.generateResponse(
+                    "Error: Edit vehicle has an invalid year", HttpStatus.MULTI_STATUS, null);
+        }
+        if(!service.validTransmission(vehicle)){
+            //Type must be automatic or manual
+            return ResponseHandler.generateResponse(
+                    "Error: Edit vehicle has an invalid transmission type", HttpStatus.MULTI_STATUS, null);
+        }
+        if(vehicle.getVehicleType().equalsIgnoreCase("new")){
+            if(!service.validNewVehicle(vehicle)){
+               return ResponseHandler.generateResponse(
+                    "Error: Edit car cannot be new with more than 1000 mileage", 
+                       HttpStatus.MULTI_STATUS, null); 
+            }
+        }
+        if(!service.validSalePrice(vehicle)){
+            return ResponseHandler.generateResponse(
+                "Error: Edit vehicle's sale price must be less than MSRP", 
+                    HttpStatus.MULTI_STATUS, null); 
+        }
+        String vehicleDesc = vehicle.getVehicleDesc();
+        if(vehicleDesc == null || vehicleDesc.length() == 0){
+            return ResponseHandler.generateResponse(
+                "Error: Edit vehicle must have a description", 
+                    HttpStatus.MULTI_STATUS, null); 
+        }
         ResponseEntity response = new ResponseEntity(HttpStatus.NOT_FOUND);
         if(vehicleId != vehicle.getVehicleID()) {
             response = new ResponseEntity(HttpStatus.UNPROCESSABLE_ENTITY);
@@ -282,9 +322,9 @@ public class ControllerAdmin {
     }
     
     @GetMapping("/getAllNewVehicles/MSRP")
-    public List<Vehicle> getAllNewVehiclesByMSRP(){
+    public List<Vehicle> getAllNewVehiclesByMSRP(String type){
         //return daoVehicle.getNewVehiclesByMSRP();
-        return service.getNewVehiclesByMSRP();
+        return service.getNewVehiclesByMSRP(type);
     }
     
 }

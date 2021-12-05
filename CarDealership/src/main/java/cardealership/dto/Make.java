@@ -8,9 +8,13 @@ import java.util.Objects;
  */
 public class Make {
     
+    public Make(){
+        
+    }
+    
     private int makeID;
     private String vehicleMake;
-    private int modelID;
+//    private int modelID;
 
     public int getMakeID() {
         return makeID;
@@ -28,20 +32,19 @@ public class Make {
         this.vehicleMake = vehicleMake;
     }
 
-    public int getModelID() {
-        return modelID;
-    }
-
-    public void setModelID(int modelID) {
-        this.modelID = modelID;
-    }
+//    public int getModelID() {
+//        return modelID;
+//    }
+//
+//    public void setModelID(int modelID) {
+//        this.modelID = modelID;
+//    }
 
     @Override
     public int hashCode() {
         int hash = 7;
-        hash = 17 * hash + this.makeID;
-        hash = 17 * hash + Objects.hashCode(this.vehicleMake);
-        hash = 17 * hash + this.modelID;
+        hash = 53 * hash + this.makeID;
+        hash = 53 * hash + Objects.hashCode(this.vehicleMake);
         return hash;
     }
 
@@ -60,12 +63,16 @@ public class Make {
         if (this.makeID != other.makeID) {
             return false;
         }
-        if (this.modelID != other.modelID) {
-            return false;
-        }
         if (!Objects.equals(this.vehicleMake, other.vehicleMake)) {
             return false;
         }
         return true;
     }
+
+    @Override
+    public String toString() {
+        return "Make{" + "makeID=" + makeID + ", vehicleMake=" + vehicleMake + '}';
+    }
+
+   
 }

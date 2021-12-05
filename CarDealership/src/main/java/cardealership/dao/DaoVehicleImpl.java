@@ -1,11 +1,14 @@
 package cardealership.dao;
 
+import cardealership.dto.Make;
+import cardealership.dto.Model;
 import cardealership.dto.Vehicle;
 import java.sql.Connection;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.sql.Statement;
+import java.util.ArrayList;
 import java.util.List;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.jdbc.core.JdbcTemplate;
@@ -109,7 +112,7 @@ public class DaoVehicleImpl implements DaoVehicle {
 
     @Override
     public List<Vehicle> getNewVehicles() {
-        final String GET_NEW_VEHICLES = "SELECT * FROM vehicle WHERE type = ?";
+        final String GET_NEW_VEHICLES = "SELECT * FROM vehicle WHERE vehicleType = ?";
         return jdbc.query(GET_NEW_VEHICLES, new VehicleMapper(), "new");
     }
 
@@ -118,15 +121,17 @@ public class DaoVehicleImpl implements DaoVehicle {
 //ORDER BY ElectricityBill DESC
 //LIMIT 1
     @Override
-    public List<Vehicle> getNewVehiclesByMSRP() {
-        final String GET_NEW_VEHICLES = "SELECT msrp AS top20 FROM vehicle "
-                + "ORDER BY msrp DESC LIMIT 20";
-        return jdbc.query(GET_NEW_VEHICLES, new VehicleMapper());
+    public List<Vehicle> getNewVehiclesByMSRP(String type) {
+        final String GET_NEW_VEHICLES = "SELECT * FROM vehicle WHERE vehicleType = ?" +
+                        " ORDER BY msrp DESC " +
+                        "LIMIT 20";
+        System.out.println(jdbc.query(GET_NEW_VEHICLES, new VehicleMapper(), type));
+        return jdbc.query(GET_NEW_VEHICLES, new VehicleMapper(), type);
     }
 
     @Override
     public List<Vehicle> getUsedVehicles() {
-        final String GET_USED_VEHICLES = "SELECT * FROM vehicle WHERE type = ?";
+        final String GET_USED_VEHICLES = "SELECT * FROM vehicle WHERE vehicleType = ?";
         return jdbc.query(GET_USED_VEHICLES, new VehicleMapper(), "used");    
     }
 
@@ -142,11 +147,39 @@ public class DaoVehicleImpl implements DaoVehicle {
         return jdbc.query(GET_FOR_SALE, new VehicleMapper(), "in stock");
     }
     
+    @Override
+    public List<Vehicle> getAllVehiclesByModel(int modelID){
+        final String GET_BY_MODEL = "SELECT * FROM vehicle WHERE modelID = ?";
+
+        return jdbc.query(GET_BY_MODEL, new VehicleMapper(), modelID);
+    }
+    
+    @Override
+    public List<Vehicle> getAllVehiclesByMake(int makeId){
+        final String GET_MAKE = "SELECT * FROM Model WHERE makeID = ?";
+        final String GET_BY_MODEL = "SELECT * FROM vehicle WHERE modelID = ?";
+        List<Model> model = jdbc.query(GET_MAKE, new ModelMapper(), makeId);
+        List<Vehicle> vehicles = new ArrayList();
+        List<Vehicle> tempVeh;
+        for(Model m: model){
+            tempVeh = jdbc.query(GET_BY_MODEL, new VehicleMapper(), m.getModelID());
+            vehicles.addAll(tempVeh);
+        }
+        return vehicles;
+    }
+    
+    @Override
+    public List<Vehicle> getAllVehiclesByYear(int year){
+        final String GET_BY_YEAR = "SELECT * FROM vehicle WHERE vehicleYear = ?";
+        return jdbc.query(GET_BY_YEAR, new VehicleMapper(), year);
+    }
+    
     public static final class VehicleMapper implements RowMapper<Vehicle>{
 
         @Override
         public Vehicle mapRow(ResultSet rs, int index) throws SQLException{
            Vehicle vec = new Vehicle();
+           vec.setVehicleID(rs.getInt("vehicleID"));
            vec.setBodyStyle(rs.getString("bodyStyle"));
            vec.setVehicleYear(rs.getInt("vehicleYear"));
            vec.setTransmission(rs.getString("transmission"));
@@ -156,10 +189,23 @@ public class DaoVehicleImpl implements DaoVehicle {
            vec.setMsrp(rs.getString("msrp"));
            vec.setSalesPrice(rs.getNString("salesPrice"));
            vec.setVehicleDesc(rs.getString("vehicleDesc"));
-           vec.setSalesStatus(rs.getString("salesStatus"));
+           vec.setSalesStatus(rs.getString("saleStatus"));
            vec.setSpecialID(rs.getInt("specialID"));
            vec.setModelID(rs.getInt("modelID"));
            return vec;
+        }
+        
+    }
+    
+    private static final class ModelMapper implements RowMapper<Model> {
+
+        @Override
+        public Model mapRow(ResultSet rs, int rowNum) throws SQLException {
+            Model newModel = new Model();
+            newModel.setModelID(rs.getInt("modelID"));
+            newModel.setVehicleModel(rs.getString("vehicleModel"));
+            newModel.setMakeID(rs.getInt("makeID"));
+            return newModel;
         }
         
     }

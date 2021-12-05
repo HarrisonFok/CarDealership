@@ -43,7 +43,7 @@ public class DaoMakeImpl implements DaoMake {
             PreparedStatement pState = conn.prepareStatement(sql, Statement.RETURN_GENERATED_KEYS);
             
             pState.setString(1, newMake.getVehicleMake());
-            pState.setInt(2, newMake.getModelID());
+//            pState.setInt(2, newMake.getModelID());
             
             return pState;
         }, key);
@@ -58,7 +58,7 @@ public class DaoMakeImpl implements DaoMake {
             Make newMake = new Make();
             newMake.setMakeID(rs.getInt("makeID"));
             newMake.setVehicleMake(rs.getString("vehicleMake"));
-            newMake.setModelID(rs.getInt("modelID"));
+//            newMake.setModelID(rs.getInt("modelID"));
             return newMake;
         }
         

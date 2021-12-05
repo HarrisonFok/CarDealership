@@ -25,7 +25,7 @@ public class DaoUsersImpl implements DaoUsers {
 
     @Override
     public User addUser(User newUser) {
-        final String sql = "INSERT INTO Users(userID, firstName, lastName, userName, userPassword, userRole) VALUES (?,?,?,?,?,?)";
+        final String sql = "INSERT INTO Users(firstName, lastName, userName, userPassword, userRole) VALUES (?,?,?,?,?)";
         GeneratedKeyHolder key = new GeneratedKeyHolder();
         jdbc.update((Connection conn) -> {
             PreparedStatement pState = conn.prepareStatement(sql, Statement.RETURN_GENERATED_KEYS);
