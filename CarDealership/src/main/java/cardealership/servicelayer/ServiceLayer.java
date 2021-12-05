@@ -59,7 +59,7 @@ public interface ServiceLayer {
     public boolean updateVehicle(Vehicle vehicle);
     public List<Vehicle> getNewVehicles(); //Only first 20 matches
     //Highest MSRP
-    public List<Vehicle> getNewVehiclesByMSRP(); //Only first 20 matches
+     public List<Vehicle> getNewVehiclesByMSRP(); //Only first 20 matches
     public List<Vehicle> getUsedVehicles(); //Only first 20 matches
     public List<Vehicle> getAllVehiclesSold();
     public List<Vehicle> getAllVehiclesForSale();
@@ -101,4 +101,6 @@ public interface ServiceLayer {
     public boolean validEmail(String email);
 //    public boolean validEmail(User newUser);
 //    public boolean validEmail(Sale newSale);
+    
+    public List<Vehicle> getInventoryIndex();
 }
