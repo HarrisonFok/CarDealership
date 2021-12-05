@@ -202,6 +202,11 @@ public class ServiceLayerImpl implements ServiceLayer {
     public boolean updateVehicle(Vehicle vehicle) {
         return daoVehicle.updateVehicle(vehicle);
     }
+    
+    @Override
+    public Vehicle getVehicle(int vehicleID){
+        return daoVehicle.getVehicle(vehicleID);
+    }
 
     @Override
     public List<Vehicle> getNewVehicles() {
@@ -440,6 +445,15 @@ public class ServiceLayerImpl implements ServiceLayer {
             return true;
         }
         return false;
+    }
+    
+    @Override
+    public boolean validVehicleForSale(int vehicleID){
+        Vehicle vec = daoVehicle.getVehicle(vehicleID);
+        if(vec.getSalesStatus().equalsIgnoreCase("sold")){
+            return false;
+        }
+        return true;
     }
     
 //    //Checks that email is in a valid fotmat

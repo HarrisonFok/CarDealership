@@ -57,6 +57,7 @@ public interface ServiceLayer {
     public Vehicle addVehicle(Vehicle newVehicle);
     public boolean removeVehicle(int vehicleId);
     public boolean updateVehicle(Vehicle vehicle);
+    public Vehicle getVehicle(int vehicleID);
     public List<Vehicle> getNewVehicles(); //Only first 20 matches
     //Highest MSRP
      public List<Vehicle> getNewVehiclesByMSRP(String type); //Only first 20 matches
@@ -107,6 +108,8 @@ public interface ServiceLayer {
 //    public boolean validEmail(Sale newSale);
     
     public boolean validPurchaseType(Sale sale);
+    
+    public boolean validVehicleForSale(int vehicleID);
     
     public List<Vehicle> getInventoryIndex();
 }

@@ -26,6 +26,9 @@ public class ControllerSales {
     @Autowired
     private ServiceLayerImpl service;
     
+    @Autowired
+    private ControllerAdmin admin;
+    
     public ControllerSales(ServiceLayerImpl service) {
         this.service = service;
     }
@@ -52,12 +55,14 @@ public class ControllerSales {
     {
         Sale newSale = new Sale();
         newSale.setEmail(email);
-        if(!service.validEmail(email)){
+        //checks for valid email
+        if(!service.validEmail(email) && email.length() != 0){
             return ResponseHandler.generateResponse(
                 "Error: invalid email. Must be in proper format", 
                     HttpStatus.MULTI_STATUS, null);
         }
         newSale.setPhone(phone);
+        //cheks if missing a phone and a email
         if(phone.length() == 0 && email.length() == 0){
             return ResponseHandler.generateResponse(
                 "Error: must have either an email or phone number", 
@@ -65,12 +70,14 @@ public class ControllerSales {
         }
         newSale.setStreet(street);
         newSale.setZipCode(zipCode);
+        //cheks if zip is exactly 5 digits long
         if(!service.validZip(newSale)){
             return ResponseHandler.generateResponse(
                     "Error: invalid zip", HttpStatus.MULTI_STATUS, null);
         }
         newSale.setPurchasePrice(purchasePrice);
         newSale.setPurchaseType(purchaseType);
+        //Checks if proper finance type
         if(!service.validPurchaseType(newSale)){
             return ResponseHandler.generateResponse(
                     "Error: invalid purchase type. Must be Bank Finance, Cash, or Dealer Finance", 
@@ -78,8 +85,22 @@ public class ControllerSales {
         }
         newSale.setUserID(userID);
         newSale.setVehicleID(vehicleID);
+        //checks if vehicle has already be sold
+        if(!service.validVehicleForSale(vehicleID)){
+            return ResponseHandler.generateResponse(
+                    "Error: vehicle has already been sold", 
+                        HttpStatus.MULTI_STATUS, null);
+        }
+        
+        //Update vehicle saleStatus
+        
+        Vehicle vecForSale = service.getVehicle(vehicleID);
+        vecForSale.setSalesStatus("sold");
+        admin.update(vehicleID, vecForSale);
+        //add sales date
         newSale.setSaleDate(saleDate);
         service.addSale(newSale);
+        
         return ResponseHandler.generateResponse("Successfully added sale!", HttpStatus.OK, newSale);
     }
 }
