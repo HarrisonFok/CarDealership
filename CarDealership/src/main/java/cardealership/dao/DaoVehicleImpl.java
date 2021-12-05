@@ -22,6 +22,10 @@ public class DaoVehicleImpl implements DaoVehicle {
     
     @Autowired
     JdbcTemplate jdbc;
+    
+    public DaoVehicleImpl(){
+        
+    }
 
     @Override
     public Vehicle addVehicle(Vehicle newVehicle) {
@@ -105,27 +109,37 @@ public class DaoVehicleImpl implements DaoVehicle {
 
     @Override
     public List<Vehicle> getNewVehicles() {
-        throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
+        final String GET_NEW_VEHICLES = "SELECT * FROM vehicle WHERE type = ?";
+        return jdbc.query(GET_NEW_VEHICLES, new VehicleMapper(), "new");
     }
 
+//SELECT DISTINCT ElectricityBill AS 3rdHighestElectricityBill
+//FROM Bills
+//ORDER BY ElectricityBill DESC
+//LIMIT 1
     @Override
     public List<Vehicle> getNewVehiclesByMSRP() {
-        throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
+        final String GET_NEW_VEHICLES = "SELECT msrp AS top20 FROM vehicle "
+                + "ORDER BY msrp DESC LIMIT 20";
+        return jdbc.query(GET_NEW_VEHICLES, new VehicleMapper());
     }
 
     @Override
     public List<Vehicle> getUsedVehicles() {
-        throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
+        final String GET_USED_VEHICLES = "SELECT * FROM vehicle WHERE type = ?";
+        return jdbc.query(GET_USED_VEHICLES, new VehicleMapper(), "used");    
     }
 
     @Override
     public List<Vehicle> getAllVehiclesSold() {
-        throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
+        final String GET_SOLD = "SELECT * FROM vehicle WHERE saleStatus = ?";
+        return jdbc.query(GET_SOLD, new VehicleMapper(), "sold");
     }
 
     @Override
     public List<Vehicle> getAllVehiclesForSale() {
-        throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
+        final String GET_FOR_SALE = "SELECT * FROM vehicle WHERE saleStatus = ?";
+        return jdbc.query(GET_FOR_SALE, new VehicleMapper(), "in stock");
     }
     
     public static final class VehicleMapper implements RowMapper<Vehicle>{

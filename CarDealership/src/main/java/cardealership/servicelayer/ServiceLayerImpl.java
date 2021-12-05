@@ -55,6 +55,8 @@ import org.springframework.stereotype.Service;
 @ComponentScan(basePackageClasses = DaoVehicleImpl.class)
 public class ServiceLayerImpl implements ServiceLayer {
     
+    
+    
     private DaoContact daoContact;
     private DaoMake daoMake;
     private DaoModel daoModel;
@@ -62,6 +64,10 @@ public class ServiceLayerImpl implements ServiceLayer {
     private DaoSpecials daoSpecials;
     private DaoUsers daoUsers;
     private DaoVehicle daoVehicle;
+    
+    public ServiceLayerImpl(){
+        
+    }
     
     public ServiceLayerImpl(DaoContact daoContact, DaoMake daoMake,
             DaoModel daoModel, DaoSales daoSales, DaoSpecials daoSpecials,
@@ -196,12 +202,12 @@ public class ServiceLayerImpl implements ServiceLayer {
     }
 
     @Override
-    public List<Vehicle> getNewVehiclesByMSRP() {
+    public List<Vehicle> getUsedVehicles() {
         throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
     }
-
+    
     @Override
-    public List<Vehicle> getUsedVehicles() {
+    public List<Vehicle> getNewVehiclesByMSRP() {
         throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
     }
 
@@ -340,6 +346,8 @@ public class ServiceLayerImpl implements ServiceLayer {
     @Override
     public boolean validYear(Vehicle addedVehicle){
         int year = Year.now().getValue();
+//        System.out.println(year);
+//        System.out.println(addedVehicle.getVehicleYear());
         if(addedVehicle.getVehicleYear() < 2000){
             return false;
         }else if(addedVehicle.getVehicleYear() > year + 1){
@@ -406,4 +414,25 @@ public class ServiceLayerImpl implements ServiceLayer {
 //    public boolean validEmail(Sale newSale){
 //        
 //    }
+    
+    //====Sales Methods====
+    @Override
+    
+    //Get all used and new cars for 
+    public List<Vehicle> getInventoryIndex(){
+        List<Vehicle> inventory = daoVehicle.getAllVehiclesForSale();
+        
+        List<Vehicle> inventoryIndex = inventory.stream()
+                .filter((s) -> s.getSalesStatus().equalsIgnoreCase("new"))
+                .collect(Collectors.toList());
+        
+        inventoryIndex.addAll(inventory.stream()
+                .filter((s) -> s.getSalesStatus().equalsIgnoreCase("used"))
+                .collect(Collectors.toList()));
+        
+        return inventoryIndex;
+    }
+    
+    
+    
 }
