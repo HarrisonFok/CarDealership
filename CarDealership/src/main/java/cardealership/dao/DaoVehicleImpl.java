@@ -72,6 +72,7 @@ public class DaoVehicleImpl implements DaoVehicle {
     public boolean updateVehicle(Vehicle vehicle) {
         // Update a vehicle in the Vehicle table
         final String sql = "UPDATE Vehicle SET "
+                + "modelID = ?,"
                 + "vehicleType = ?, "
                 + "bodyStyle = ?, "
                 + "vehicleYear = ?, "
@@ -82,9 +83,9 @@ public class DaoVehicleImpl implements DaoVehicle {
                 + "msrp = ?, "
                 + "salesPrice = ?, "
                 + "vehicleDesc = ?, "
-                + "salesStatus = ?, "
-                + "specialID = ?, "
-                + "modelID = ?;";
+                + "saleStatus = ?, "
+                + "specialID = ?; ";
+                
         
         return jdbc.update(sql,
                 vehicle.getModelID(),
@@ -181,6 +182,7 @@ public class DaoVehicleImpl implements DaoVehicle {
            Vehicle vec = new Vehicle();
            vec.setVehicleID(rs.getInt("vehicleID"));
            vec.setBodyStyle(rs.getString("bodyStyle"));
+           vec.setVehicleType(rs.getString("vehicleType"));
            vec.setVehicleYear(rs.getInt("vehicleYear"));
            vec.setTransmission(rs.getString("transmission"));
            vec.setColour(rs.getString("colour"));
