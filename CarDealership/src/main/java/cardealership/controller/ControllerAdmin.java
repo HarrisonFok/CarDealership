@@ -84,20 +84,31 @@ public class ControllerAdmin {
     }
     
     @PostMapping("/addUser")
-    public User addUser(String firstName, String lastName, String userName,
+    public ResponseEntity<Object> addUser(String firstName, String lastName, String userName,
             String password, String role){
         User newUser = new User();
 
+        if(firstName.isEmpty() || lastName.isEmpty() || userName.isEmpty() || password.isEmpty() || role.isEmpty()){
+            return ResponseHandler.generateResponse(
+                    "Error: All user fields must be filled",
+                    HttpStatus.MULTI_STATUS, null);
+        }
+        if (!role.equalsIgnoreCase("disabled") && !role.equalsIgnoreCase("admin") && !role.equalsIgnoreCase("sales")){
+            return ResponseHandler.generateResponse(
+                    "Error: User roles can only be: disabled, admin, or sales",
+                    HttpStatus.MULTI_STATUS, null);
+        }
         newUser.setFirstName(firstName);
         newUser.setLastName(lastName);
         newUser.setUserName(userName);
         newUser.setUserPassword(password);
         newUser.setUserRole(role);
-        return service.addUser(newUser);
+        service.addUser(newUser);
+        return ResponseHandler.generateResponse("Successfully added user!", HttpStatus.OK, newUser);
     }
     
     @PutMapping("editUser/{id}")
-    public ResponseEntity update(@PathVariable int userId, 
+    public ResponseEntity update(@PathVariable int userId,
             @RequestBody User user) {
         ResponseEntity response = new ResponseEntity(HttpStatus.NOT_FOUND);
         if(userId != user.getUserID()) {
