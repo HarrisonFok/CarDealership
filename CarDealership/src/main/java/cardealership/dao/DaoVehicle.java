@@ -24,12 +24,18 @@ public interface DaoVehicle {
     
     public List<Vehicle> getNewVehicles(); //Only first 20 matches
     //Highest MSRP
-    public List<Vehicle> getNewVehiclesByMSRP(); //Only first 20 matches
+    public List<Vehicle> getNewVehiclesByMSRP(String type); //Only first 20 matches
     
     public List<Vehicle> getUsedVehicles(); //Only first 20 matches
     
     public List<Vehicle> getAllVehiclesSold();
     
     public List<Vehicle> getAllVehiclesForSale();
+    
+    public List<Vehicle> getAllVehiclesByModel(int modelId);
+    
+    public List<Vehicle> getAllVehiclesByMake(int makeId);
+    
+    public List<Vehicle> getAllVehiclesByYear(int year);
     
 }

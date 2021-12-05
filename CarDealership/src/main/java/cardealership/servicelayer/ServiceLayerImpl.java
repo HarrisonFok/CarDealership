@@ -38,6 +38,7 @@ import java.util.List;
 import java.util.Map;
 import java.util.Set;
 import java.util.stream.Collectors;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.annotation.ComponentScan;
 import org.springframework.stereotype.Service;
 
@@ -56,13 +57,19 @@ import org.springframework.stereotype.Service;
 public class ServiceLayerImpl implements ServiceLayer {
     
     
-    
+    @Autowired
     private DaoContact daoContact;
+    @Autowired
     private DaoMake daoMake;
+    @Autowired
     private DaoModel daoModel;
+    @Autowired
     private DaoSales daoSales;
+    @Autowired
     private DaoSpecials daoSpecials;
+    @Autowired
     private DaoUsers daoUsers;
+    @Autowired
     private DaoVehicle daoVehicle;
     
     public ServiceLayerImpl(){
@@ -81,7 +88,7 @@ public class ServiceLayerImpl implements ServiceLayer {
         this.daoVehicle = daoVehicle;
     }
 
-    @Override
+     @Override
     public Contact addContact(Contact newContact) {
         return daoContact.addContact(newContact);
     }
@@ -202,11 +209,6 @@ public class ServiceLayerImpl implements ServiceLayer {
     }
 
     @Override
-    public List<Vehicle> getNewVehiclesByMSRP() {
-        return daoVehicle.getNewVehiclesByMSRP();
-    }
-
-    @Override
     public List<Vehicle> getUsedVehicles() {
         return daoVehicle.getUsedVehicles();
     }
@@ -219,6 +221,30 @@ public class ServiceLayerImpl implements ServiceLayer {
     @Override
     public List<Vehicle> getAllVehiclesForSale() {
         return daoVehicle.getAllVehiclesForSale();
+    }
+    
+    @Override
+    public List<Vehicle> getNewVehiclesByMSRP(String type) {
+        return daoVehicle.getNewVehiclesByMSRP(type);
+    }
+    
+    @Override
+    public List<Vehicle> getAllVehiclesByModel(int modelId){
+        System.out.println("\n ======= before service Call ======= \n");
+        System.out.println("\n ======= "+ modelId +" ======= \n");
+        daoVehicle.getAllVehiclesByModel(modelId);
+        System.out.println("\n ======= after service Call ======= \n");
+        return daoVehicle.getAllVehiclesByModel(modelId);
+    }
+    
+    @Override
+    public List<Vehicle> getAllVehiclesByMake(int makeId){
+        return daoVehicle.getAllVehiclesByMake(makeId);
+    }
+    
+    @Override
+    public List<Vehicle> getAllVehiclesByYear(int year){
+        return daoVehicle.getAllVehiclesByYear(year);
     }
     
     //====Business-Logic Methods====
@@ -402,6 +428,18 @@ public class ServiceLayerImpl implements ServiceLayer {
            java.util.regex.Pattern p = java.util.regex.Pattern.compile(ePattern);
            java.util.regex.Matcher m = p.matcher(email);
            return m.matches();
+    }
+    
+    @Override
+    public boolean validPurchaseType(Sale sale){
+        if(sale.getPurchaseType().equalsIgnoreCase("Bank Finance")){
+            return true;
+        }else if(sale.getPurchaseType().equalsIgnoreCase("Cash")){
+            return true;
+        }else if(sale.getPurchaseType().equalsIgnoreCase("Dealer Finance")){
+            return true;
+        }
+        return false;
     }
     
 //    //Checks that email is in a valid fotmat

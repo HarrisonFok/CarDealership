@@ -10,6 +10,7 @@ public class Model {
     
     private int modelID;
     private String vehicleModel;
+    private int makeID;
 
     public Model(){
         
@@ -35,12 +36,21 @@ public class Model {
     public void setVehicleModel(String vehicleModel) {
         this.vehicleModel = vehicleModel;
     }
+    
+    public int getMakeID(){
+        return makeID;
+    }
+    
+    public void setMakeID(int makeID){
+        this.makeID = makeID;
+    }
 
     @Override
     public int hashCode() {
-        int hash = 5;
-        hash = 41 * hash + this.modelID;
-        hash = 41 * hash + Objects.hashCode(this.vehicleModel);
+        int hash = 3;
+        hash = 19 * hash + this.modelID;
+        hash = 19 * hash + Objects.hashCode(this.vehicleModel);
+        hash = 19 * hash + this.makeID;
         return hash;
     }
 
@@ -59,11 +69,21 @@ public class Model {
         if (this.modelID != other.modelID) {
             return false;
         }
+        if (this.makeID != other.makeID) {
+            return false;
+        }
         if (!Objects.equals(this.vehicleModel, other.vehicleModel)) {
             return false;
         }
         return true;
     }
+
+    @Override
+    public String toString() {
+        return "Model{" + "modelID=" + modelID + ", vehicleModel=" + vehicleModel + ", makeID=" + makeID + '}';
+    }
+
+    
     
     
 }

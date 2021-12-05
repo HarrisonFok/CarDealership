@@ -14,6 +14,8 @@ import cardealership.dto.User;
 import cardealership.dto.Vehicle;
 import cardealership.servicelayer.ServiceLayerImpl;
 import java.time.LocalDate;
+import java.time.ZoneId;
+import java.util.Date;
 import java.util.List;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.annotation.ComponentScan;
@@ -51,14 +53,15 @@ public class ControllerAdmin {
     }
     
     @PostMapping("/addUser")
-    public User addUser(String firsName, String lastName, String userName,
+    public User addUser(String firstName, String lastName, String userName,
             String password, String role){
         User newUser = new User();
-        //setters here
-        //*
-        //*
-        //*
-        //return daoUsers.addUser(newUser);
+
+        newUser.setFirstName(firstName);
+        newUser.setLastName(lastName);
+        newUser.setUserName(userName);
+        newUser.setUserPassword(password);
+        newUser.setUserRole(role);
         return service.addUser(newUser);
     }
     
@@ -91,7 +94,7 @@ public class ControllerAdmin {
     public Make addMake(String make, int modelId){
         Make newMake = new Make();
         
-        newMake.setModelID(modelId);
+//        newMake.setModelID(modelId);
         newMake.setVehicleMake(make);
         //return daoMake.addMake(newMake);
         return service.addMake(newMake);
@@ -114,11 +117,10 @@ public class ControllerAdmin {
     @PostMapping("/addSpecial")
     public Special addSpecial(LocalDate start, LocalDate end, String discount){
         Special newSpecial = new Special();
-        /////Setters
-        //
-        //
-        //
-        //return daoSpecials.addSpecial(newSpecial);
+
+        newSpecial.setStartDate(Date.from(start.atStartOfDay(ZoneId.systemDefault()).toInstant()));
+        newSpecial.setEndDate(Date.from(end.atStartOfDay(ZoneId.systemDefault()).toInstant()));
+        newSpecial.setDiscount(discount);
         return service.addSpecial(newSpecial);
     }
     
@@ -212,9 +214,49 @@ public class ControllerAdmin {
 //        return service.addVehicle(newVehicle);
 //    }
     
+//    @PutMapping("editVehicle/{vehicleId}")
+//    public ResponseEntity update(@PathVariable int vehicleId, 
+//            @RequestBody Vehicle vehicle) {
+//        ResponseEntity response = new ResponseEntity(HttpStatus.NOT_FOUND);
+//        if(vehicleId != vehicle.getVehicleID()) {
+//            response = new ResponseEntity(HttpStatus.UNPROCESSABLE_ENTITY);
+//        //} else if (daoVehicle.updateVehicle(vehicle)) {
+//        } else if (service.updateVehicle(vehicle)) {
+//            response = new ResponseEntity(HttpStatus.NO_CONTENT);
+//        }
+//        return response;
+//    }
+    
     @PutMapping("editVehicle/{vehicleId}")
     public ResponseEntity update(@PathVariable int vehicleId, 
             @RequestBody Vehicle vehicle) {
+        if(!service.validYear(vehicle)){
+            return ResponseHandler.generateResponse(
+                    "Error: Edit vehicle has an invalid year", HttpStatus.MULTI_STATUS, null);
+        }
+        if(!service.validTransmission(vehicle)){
+            //Type must be automatic or manual
+            return ResponseHandler.generateResponse(
+                    "Error: Edit vehicle has an invalid transmission type", HttpStatus.MULTI_STATUS, null);
+        }
+        if(vehicle.getVehicleType().equalsIgnoreCase("new")){
+            if(!service.validNewVehicle(vehicle)){
+               return ResponseHandler.generateResponse(
+                    "Error: Edit car cannot be new with more than 1000 mileage", 
+                       HttpStatus.MULTI_STATUS, null); 
+            }
+        }
+        if(!service.validSalePrice(vehicle)){
+            return ResponseHandler.generateResponse(
+                "Error: Edit vehicle's sale price must be less than MSRP", 
+                    HttpStatus.MULTI_STATUS, null); 
+        }
+        String vehicleDesc = vehicle.getVehicleDesc();
+        if(vehicleDesc == null || vehicleDesc.length() == 0){
+            return ResponseHandler.generateResponse(
+                "Error: Edit vehicle must have a description", 
+                    HttpStatus.MULTI_STATUS, null); 
+        }
         ResponseEntity response = new ResponseEntity(HttpStatus.NOT_FOUND);
         if(vehicleId != vehicle.getVehicleID()) {
             response = new ResponseEntity(HttpStatus.UNPROCESSABLE_ENTITY);
@@ -249,9 +291,9 @@ public class ControllerAdmin {
     }
     
     @GetMapping("/getAllNewVehicles/MSRP")
-    public List<Vehicle> getAllNewVehiclesByMSRP(){
+    public List<Vehicle> getAllNewVehiclesByMSRP(String type){
         //return daoVehicle.getNewVehiclesByMSRP();
-        return service.getNewVehiclesByMSRP();
+        return service.getNewVehiclesByMSRP(type);
     }
     
 }

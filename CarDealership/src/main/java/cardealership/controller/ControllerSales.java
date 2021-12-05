@@ -45,8 +45,6 @@ public class ControllerSales {
         return service.getSale(saleID);
     }
     
-    
-    
     @PostMapping("/addSale")
     public ResponseEntity<Object> addSale(String email, String phone, String street, 
             Integer zipCode, String purchasePrice, String purchaseType, 
@@ -73,6 +71,11 @@ public class ControllerSales {
         }
         newSale.setPurchasePrice(purchasePrice);
         newSale.setPurchaseType(purchaseType);
+        if(!service.validPurchaseType(newSale)){
+            return ResponseHandler.generateResponse(
+                    "Error: invalid purchase type. Must be Bank Finance, Cash, or Dealer Finance", 
+                        HttpStatus.MULTI_STATUS, null);
+        }
         newSale.setUserID(userID);
         newSale.setVehicleID(vehicleID);
         newSale.setSaleDate(saleDate);
