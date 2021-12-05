@@ -14,6 +14,8 @@ import cardealership.dto.User;
 import cardealership.dto.Vehicle;
 import cardealership.servicelayer.ServiceLayerImpl;
 import java.time.LocalDate;
+import java.time.ZoneId;
+import java.util.Date;
 import java.util.List;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.annotation.ComponentScan;
@@ -82,14 +84,15 @@ public class ControllerAdmin {
     }
     
     @PostMapping("/addUser")
-    public User addUser(String firsName, String lastName, String userName,
+    public User addUser(String firstName, String lastName, String userName,
             String password, String role){
         User newUser = new User();
-        //setters here
-        //*
-        //*
-        //*
-        //return daoUsers.addUser(newUser);
+
+        newUser.setFirstName(firstName);
+        newUser.setLastName(lastName);
+        newUser.setUserName(userName);
+        newUser.setUserPassword(password);
+        newUser.setUserRole(role);
         return service.addUser(newUser);
     }
     
@@ -145,11 +148,10 @@ public class ControllerAdmin {
     @PostMapping("/addSpecial")
     public Special addSpecial(LocalDate start, LocalDate end, String discount){
         Special newSpecial = new Special();
-        /////Setters
-        //
-        //
-        //
-        //return daoSpecials.addSpecial(newSpecial);
+
+        newSpecial.setStartDate(Date.from(start.atStartOfDay(ZoneId.systemDefault()).toInstant()));
+        newSpecial.setEndDate(Date.from(end.atStartOfDay(ZoneId.systemDefault()).toInstant()));
+        newSpecial.setDiscount(discount);
         return service.addSpecial(newSpecial);
     }
     
