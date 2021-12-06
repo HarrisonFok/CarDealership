@@ -19,16 +19,10 @@ import java.util.Date;
 import java.util.List;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.annotation.ComponentScan;
+import org.springframework.format.annotation.DateTimeFormat;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
-import org.springframework.web.bind.annotation.DeleteMapping;
-import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.PathVariable;
-import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.PutMapping;
-import org.springframework.web.bind.annotation.RequestBody;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.bind.annotation.*;
 
 /**
  *
@@ -157,7 +151,11 @@ public class ControllerAdmin {
     //=====Specials Methods =====
     
     @PostMapping("/addSpecial")
-    public Special addSpecial(LocalDate start, LocalDate end, String discount){
+    public Special addSpecial(@RequestParam("start")
+                                  @DateTimeFormat(iso = DateTimeFormat.ISO.DATE) LocalDate start,
+                              @RequestParam("end")
+                              @DateTimeFormat(iso = DateTimeFormat.ISO.DATE)LocalDate end,
+                              String discount){
         Special newSpecial = new Special();
 
         newSpecial.setStartDate(Date.from(start.atStartOfDay(ZoneId.systemDefault()).toInstant()));
@@ -336,9 +334,12 @@ public class ControllerAdmin {
         return response;
     }
     
-    @PutMapping("remoVehicle/{vehicleId}")
-    public boolean removeVehicle(@PathVariable int vehicleId) {
-        return service.removeVehicle(vehicleId);
+    @DeleteMapping("removeVehicle/{vehicleId}")
+    public ResponseEntity removeVehicle(@PathVariable int vehicleId) {
+        if (service.removeVehicle(vehicleId)){
+            return new ResponseEntity(HttpStatus.NO_CONTENT);
+        }
+        return new ResponseEntity(HttpStatus.NOT_FOUND);
     }
     
     @GetMapping("/getVehiclesSold")
