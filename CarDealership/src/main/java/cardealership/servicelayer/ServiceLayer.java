@@ -57,12 +57,17 @@ public interface ServiceLayer {
     public Vehicle addVehicle(Vehicle newVehicle);
     public boolean removeVehicle(int vehicleId);
     public boolean updateVehicle(Vehicle vehicle);
+    public Vehicle getVehicle(int vehicleID);
     public List<Vehicle> getNewVehicles(); //Only first 20 matches
     //Highest MSRP
-    public List<Vehicle> getNewVehiclesByMSRP(); //Only first 20 matches
+     public List<Vehicle> getNewVehiclesByMSRP(String type); //Only first 20 matches
     public List<Vehicle> getUsedVehicles(); //Only first 20 matches
     public List<Vehicle> getAllVehiclesSold();
     public List<Vehicle> getAllVehiclesForSale();
+    
+    public List<Vehicle> getAllVehiclesByModel(int modelId);
+    public List<Vehicle> getAllVehiclesByMake(int makeId);
+    public List<Vehicle> getAllVehiclesByYear(int year);
     
     //====Business-Logic Methods====
     //Find sales between dates
@@ -101,4 +106,10 @@ public interface ServiceLayer {
     public boolean validEmail(String email);
 //    public boolean validEmail(User newUser);
 //    public boolean validEmail(Sale newSale);
+    
+    public boolean validPurchaseType(Sale sale);
+    
+    public boolean validVehicleForSale(int vehicleID);
+    
+    public List<Vehicle> getInventoryIndex();
 }

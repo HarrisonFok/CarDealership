@@ -38,6 +38,7 @@ import java.util.List;
 import java.util.Map;
 import java.util.Set;
 import java.util.stream.Collectors;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.annotation.ComponentScan;
 import org.springframework.stereotype.Service;
 
@@ -55,13 +56,25 @@ import org.springframework.stereotype.Service;
 @ComponentScan(basePackageClasses = DaoVehicleImpl.class)
 public class ServiceLayerImpl implements ServiceLayer {
     
+    
+    @Autowired
     private DaoContact daoContact;
+    @Autowired
     private DaoMake daoMake;
+    @Autowired
     private DaoModel daoModel;
+    @Autowired
     private DaoSales daoSales;
+    @Autowired
     private DaoSpecials daoSpecials;
+    @Autowired
     private DaoUsers daoUsers;
+    @Autowired
     private DaoVehicle daoVehicle;
+    
+    public ServiceLayerImpl(){
+        
+    }
     
     public ServiceLayerImpl(DaoContact daoContact, DaoMake daoMake,
             DaoModel daoModel, DaoSales daoSales, DaoSpecials daoSpecials,
@@ -75,104 +88,104 @@ public class ServiceLayerImpl implements ServiceLayer {
         this.daoVehicle = daoVehicle;
     }
 
-    @Override
+     @Override
     public Contact addContact(Contact newContact) {
-        throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
+        return daoContact.addContact(newContact);
     }
 
     @Override
     public List<Contact> getAllContacts() {
-        throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
+        return daoContact.getAllContacts();
     }
 
     @Override
     public boolean editContact(Contact newContact) {
-        throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
+        return daoContact.editContact(newContact);
     }
 
     @Override
     public Make getMake(int makeId) {
-        throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
+        return daoMake.getMake(makeId);
     }
 
     @Override
     public List<Make> getAllMakes() {
-        throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
+        return daoMake.getAllMakes();
     }
 
     @Override
     public Make addMake(Make newMake) {
-        throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
+        return daoMake.addMake(newMake);
     }
 
     @Override
     public Model getModel(int modelId) {
-        throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
+        return daoModel.getModel(modelId);
     }
 
     @Override
     public List<Model> getAllModels() {
-        throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
+        return daoModel.getAllModels();
     }
 
     @Override
     public Model addModel(Model newModel) {
-        throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
+        return daoModel.addModel(newModel);
     }
 
     @Override
     public Sale addSale(Sale newSale) {
-        throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
+        return daoSales.addSale(newSale);
     }
 
     @Override
     public List<Sale> getAllSales() {
-        throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
+        return daoSales.getAllSales();
     }
 
     @Override
     public Sale getSale(int saleId) {
-        throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
+        return daoSales.getSale(saleId);
     }
 
     @Override
     public Special addSpecial(Special sp) {
-        throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
+        return daoSpecials.addSpecial(sp);
     }
 
     @Override
     public boolean removeSpecial(int specialId) {
-        throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
+        return daoSpecials.removeSpecial(specialId);
     }
 
     @Override
     public Special getSpecial(int specialId) {
-        throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
+        return daoSpecials.getSpecial(specialId);
     }
 
     @Override
     public User addUser(User newUser) {
-        throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
+        return daoUsers.addUser(newUser);
     }
 
     @Override
     public boolean updateUser(User user) {
-        throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
+        return daoUsers.updateUser(user);
     }
 
     @Override
     public boolean updateUserPassword(User user) {
-        throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
+        return daoUsers.updateUserPassword(user);
     }
 
     @Override
     public User getUser(int userId) {
-        throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
+        return daoUsers.getUser(userId);
     }
 
     @Override
     public List<User> getAllUsers() {
-        throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
+        return daoUsers.getAllUsers();
     }
 
     @Override
@@ -189,30 +202,54 @@ public class ServiceLayerImpl implements ServiceLayer {
     public boolean updateVehicle(Vehicle vehicle) {
         return daoVehicle.updateVehicle(vehicle);
     }
-
+    
     @Override
-    public List<Vehicle> getNewVehicles() {
-        throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
+    public Vehicle getVehicle(int vehicleID){
+        return daoVehicle.getVehicle(vehicleID);
     }
 
     @Override
-    public List<Vehicle> getNewVehiclesByMSRP() {
-        throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
+    public List<Vehicle> getNewVehicles() {
+        return daoVehicle.getNewVehicles();
     }
 
     @Override
     public List<Vehicle> getUsedVehicles() {
-        throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
+        return daoVehicle.getUsedVehicles();
     }
 
     @Override
     public List<Vehicle> getAllVehiclesSold() {
-        throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
+        return daoVehicle.getAllVehiclesSold();
     }
 
     @Override
     public List<Vehicle> getAllVehiclesForSale() {
-        throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
+        return daoVehicle.getAllVehiclesForSale();
+    }
+    
+    @Override
+    public List<Vehicle> getNewVehiclesByMSRP(String type) {
+        return daoVehicle.getNewVehiclesByMSRP(type);
+    }
+    
+    @Override
+    public List<Vehicle> getAllVehiclesByModel(int modelId){
+        System.out.println("\n ======= before service Call ======= \n");
+        System.out.println("\n ======= "+ modelId +" ======= \n");
+        daoVehicle.getAllVehiclesByModel(modelId);
+        System.out.println("\n ======= after service Call ======= \n");
+        return daoVehicle.getAllVehiclesByModel(modelId);
+    }
+    
+    @Override
+    public List<Vehicle> getAllVehiclesByMake(int makeId){
+        return daoVehicle.getAllVehiclesByMake(makeId);
+    }
+    
+    @Override
+    public List<Vehicle> getAllVehiclesByYear(int year){
+        return daoVehicle.getAllVehiclesByYear(year);
     }
     
     //====Business-Logic Methods====
@@ -340,6 +377,8 @@ public class ServiceLayerImpl implements ServiceLayer {
     @Override
     public boolean validYear(Vehicle addedVehicle){
         int year = Year.now().getValue();
+//        System.out.println(year);
+//        System.out.println(addedVehicle.getVehicleYear());
         if(addedVehicle.getVehicleYear() < 2000){
             return false;
         }else if(addedVehicle.getVehicleYear() > year + 1){
@@ -352,7 +391,7 @@ public class ServiceLayerImpl implements ServiceLayer {
     @Override
     public boolean validTransmission(Vehicle addedVehicle){
         final String AUTO = "automatic";
-        final String MANUAL = "manul";
+        final String MANUAL = "manual";
         if(AUTO.equalsIgnoreCase(addedVehicle.getTransmission())){
             return true;
         }else if(MANUAL.equalsIgnoreCase(addedVehicle.getTransmission())){
@@ -396,6 +435,27 @@ public class ServiceLayerImpl implements ServiceLayer {
            return m.matches();
     }
     
+    @Override
+    public boolean validPurchaseType(Sale sale){
+        if(sale.getPurchaseType().equalsIgnoreCase("Bank Finance")){
+            return true;
+        }else if(sale.getPurchaseType().equalsIgnoreCase("Cash")){
+            return true;
+        }else if(sale.getPurchaseType().equalsIgnoreCase("Dealer Finance")){
+            return true;
+        }
+        return false;
+    }
+    
+    @Override
+    public boolean validVehicleForSale(int vehicleID){
+        Vehicle vec = daoVehicle.getVehicle(vehicleID);
+        if(vec.getSalesStatus().equalsIgnoreCase("sold")){
+            return false;
+        }
+        return true;
+    }
+    
 //    //Checks that email is in a valid fotmat
 //    @Override
 //    public boolean validEmail(User newUser){
@@ -406,4 +466,25 @@ public class ServiceLayerImpl implements ServiceLayer {
 //    public boolean validEmail(Sale newSale){
 //        
 //    }
+    
+    //====Sales Methods====
+    @Override
+    
+    //Get all used and new cars for 
+    public List<Vehicle> getInventoryIndex(){
+        List<Vehicle> inventory = daoVehicle.getAllVehiclesForSale();
+        
+        List<Vehicle> inventoryIndex = inventory.stream()
+                .filter((s) -> s.getSalesStatus().equalsIgnoreCase("new"))
+                .collect(Collectors.toList());
+        
+        inventoryIndex.addAll(inventory.stream()
+                .filter((s) -> s.getSalesStatus().equalsIgnoreCase("used"))
+                .collect(Collectors.toList()));
+        
+        return inventoryIndex;
+    }
+    
+    
+    
 }
