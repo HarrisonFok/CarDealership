@@ -22,14 +22,22 @@ import org.springframework.context.annotation.ComponentScan;
 import org.springframework.format.annotation.DateTimeFormat;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
-import org.springframework.web.bind.annotation.*;
+import org.springframework.web.bind.annotation.DeleteMapping;
+import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.PathVariable;
+import org.springframework.web.bind.annotation.PostMapping;
+import org.springframework.web.bind.annotation.PutMapping;
+import org.springframework.web.bind.annotation.RequestBody;
+import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RequestParam;
+import org.springframework.web.bind.annotation.RestController;
 
 /**
  *
  * @author Joshua Martel
  */
 @RestController
-@RequestMapping("/dealership")
+@RequestMapping("/dealership/admin")
 @ComponentScan(basePackageClasses = ServiceLayerImpl.class)
 public class ControllerAdmin {
     
@@ -39,37 +47,6 @@ public class ControllerAdmin {
     public ControllerAdmin(ServiceLayerImpl service) {
         this.service = service;
     }
-    
-    
-    
-    /*
-    @Autowired
-    private final DaoContact daoContact;
-    @Autowired
-    private final DaoMake daoMake;
-    @Autowired
-    private final DaoModel daoModel;
-    @Autowired
-    private final DaoSales daoSales;
-    @Autowired
-    private final DaoSpecials daoSpecials;
-    @Autowired
-    private final DaoUsers daoUsers;
-    @Autowired
-    private final DaoVehicle daoVehicle;
-    
-    public ControllerAdmin(DaoContact daoContact, DaoMake daoMake,
-            DaoModel daoModel, DaoSales daoSales, DaoSpecials daoSpecials,
-            DaoUsers daoUsers, DaoVehicle daoVehicle){
-        this.daoContact = daoContact;
-        this.daoMake = daoMake;
-        this.daoModel = daoModel;
-        this.daoSales = daoSales;
-        this.daoSpecials = daoSpecials;
-        this.daoUsers = daoUsers;
-        this.daoVehicle = daoVehicle;
-    }
-    */
     
     @GetMapping("/getAllUsers")
     public List<User> getAllUsers(){
@@ -101,8 +78,21 @@ public class ControllerAdmin {
         return ResponseHandler.generateResponse("Successfully added user!", HttpStatus.OK, newUser);
     }
     
+//    @PostMapping("/addUser")
+//    public User addUser(String firstName, String lastName, String userName,
+//            String password, String role){
+//        User newUser = new User();
+//
+//        newUser.setFirstName(firstName);
+//        newUser.setLastName(lastName);
+//        newUser.setUserName(userName);
+//        newUser.setUserPassword(password);
+//        newUser.setUserRole(role);
+//        return service.addUser(newUser);
+//    }
+    
     @PutMapping("editUser/{userId}")
-    public ResponseEntity update(@PathVariable int userId,
+    public ResponseEntity update(@PathVariable int userId, 
             @RequestBody User user) {
         ResponseEntity response = new ResponseEntity(HttpStatus.NOT_FOUND);
         if(userId != user.getUserID()) {
@@ -127,7 +117,7 @@ public class ControllerAdmin {
     //====Make Methods====
     
     @PostMapping("/addMake")
-    public Make addMake(String make){
+    public Make addMake(String make, int modelId){
         Make newMake = new Make();
         
 //        newMake.setModelID(modelId);
@@ -140,10 +130,10 @@ public class ControllerAdmin {
     
     
     @PostMapping("/addModel")
-    public Model addModel(String model, int makeId){
+    public Model addModel(String model){
         Model newModel = new Model();
         newModel.setVehicleModel(model);
-        newModel.setMakeID(makeId);
+
         //return daoModel.addModel(newModel);
         return service.addModel(newModel);
     }
@@ -164,10 +154,19 @@ public class ControllerAdmin {
         return service.addSpecial(newSpecial);
     }
     
+//    @PostMapping("/addSpecial")
+//    public Special addSpecial(LocalDate start, LocalDate end, String discount){
+//        Special newSpecial = new Special();
+//
+//        newSpecial.setStartDate(Date.from(start.atStartOfDay(ZoneId.systemDefault()).toInstant()));
+//        newSpecial.setEndDate(Date.from(end.atStartOfDay(ZoneId.systemDefault()).toInstant()));
+//        newSpecial.setDiscount(discount);
+//        return service.addSpecial(newSpecial);
+//    }
+    
     @DeleteMapping("/removeSpecial/{id}")
     public ResponseEntity<Special> delete(@PathVariable int id) {
         //if(daoSpecials.removeSpecial(id)) {
-
         if(service.removeSpecial(id)) {
             return new ResponseEntity(HttpStatus.NO_CONTENT);
         }
@@ -256,6 +255,59 @@ public class ControllerAdmin {
     }
     
 //    @PostMapping("addVehicle")
+//    public ResponseEntity<Object> addVehicle(int modelId, String vehicleType, String bodyStyle,
+//            int vehicleYear,String transmission, String colour, int mileage, String vin, 
+//            String msrp, String salesPrice, String vehicleDesc, String saleStatus, int specialId){
+//        
+//        Vehicle newVehicle = new Vehicle();
+//        
+//        newVehicle.setModelID(modelId);
+//        newVehicle.setVehicleType(vehicleType);
+//        newVehicle.setBodyStyle(bodyStyle);
+//        newVehicle.setVehicleYear(vehicleYear);
+//        if(!service.validYear(newVehicle)){
+//            return ResponseHandler.generateResponse(
+//                    "Error: Invalid year", HttpStatus.MULTI_STATUS, null);
+//        }
+//        newVehicle.setTransmission(transmission);
+//        if(!service.validTransmission(newVehicle)){
+//            //Type must be automatic or manual
+//            return ResponseHandler.generateResponse(
+//                    "Error: Invalid transmission type", HttpStatus.MULTI_STATUS, null);
+//        }
+//        
+//        newVehicle.setColour(colour);
+//        newVehicle.setMileage(mileage);
+//        if(newVehicle.getVehicleType().equalsIgnoreCase("new")){
+//            if(!service.validNewVehicle(newVehicle)){
+//               return ResponseHandler.generateResponse(
+//                    "Error: Car cannot be new with more than 1000 mileage", 
+//                       HttpStatus.MULTI_STATUS, null); 
+//            }
+//        }
+//        newVehicle.setVin(vin);
+//        newVehicle.setMsrp(msrp);
+//        newVehicle.setSalesPrice(salesPrice);
+//        if(!service.validSalePrice(newVehicle)){
+//            return ResponseHandler.generateResponse(
+//                "Error: Sale price must be less than MSRP", 
+//                    HttpStatus.MULTI_STATUS, null); 
+//        }
+//        if(vehicleDesc == null || vehicleDesc.length() == 0){
+//            return ResponseHandler.generateResponse(
+//                "Error: Vehicle must have a description", 
+//                    HttpStatus.MULTI_STATUS, null); 
+//        }
+//        newVehicle.setVehicleDesc(vehicleDesc);
+//        newVehicle.setSalesStatus(saleStatus);
+//        newVehicle.setSpecialID(specialId);
+//        
+//        service.addVehicle(newVehicle);
+//        //return daoVehicle.addVehicle(newVehicle);
+//        return ResponseHandler.generateResponse("Successfully added Vehicle!", HttpStatus.OK, newVehicle);
+//    }
+    
+//    @PostMapping("addVehicle")
 //    public Vehicle addVehicle(int modelId, String vehicleType, String bodyStyle,
 //            int vehicleYear,String transmission, String colour, int mileage, String vin, 
 //            String msrp, String salesPrice, String vehicleDesc, String saleStatus, int specialId){
@@ -331,7 +383,7 @@ public class ControllerAdmin {
         } else if (service.updateVehicle(vehicle)) {
             response = new ResponseEntity(HttpStatus.NO_CONTENT);
         }
-        return response;
+        return ResponseHandler.generateResponse("Successfully edited Vehicle!", HttpStatus.OK, vehicle);
     }
     
     @DeleteMapping("removeVehicle/{vehicleId}")

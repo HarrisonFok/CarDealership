@@ -235,10 +235,7 @@ public class ServiceLayerImpl implements ServiceLayer {
     
     @Override
     public List<Vehicle> getAllVehiclesByModel(int modelId){
-        System.out.println("\n ======= before service Call ======= \n");
-        System.out.println("\n ======= "+ modelId +" ======= \n");
         daoVehicle.getAllVehiclesByModel(modelId);
-        System.out.println("\n ======= after service Call ======= \n");
         return daoVehicle.getAllVehiclesByModel(modelId);
     }
     
@@ -456,16 +453,6 @@ public class ServiceLayerImpl implements ServiceLayer {
         return true;
     }
     
-//    //Checks that email is in a valid fotmat
-//    @Override
-//    public boolean validEmail(User newUser){
-//        
-//    }
-//    //Checks that email is in a valid fotmat
-//    @Override
-//    public boolean validEmail(Sale newSale){
-//        
-//    }
     
     //====Sales Methods====
     @Override
