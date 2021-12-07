@@ -66,6 +66,12 @@ public class DaoContactImpl implements DaoContact {
                 newContact.getContactID()) > 0;
     }
     
+    @Override
+    public boolean deleteContactById(int id){
+        final String sql = "DELETE FROM Contact WHERE contactID = ?";
+        return jdbc.update(sql, id) > 0;
+    }
+    
     private static final class ContactMapper implements RowMapper<Contact> {
 
         @Override

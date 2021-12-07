@@ -23,5 +23,7 @@ public interface DaoSales {
     
     public Sale getSale(int saleId);
     
+    public boolean deleteSaleById(int saleID);
+    
     
 }

@@ -44,11 +44,10 @@ public class DaoUsersImpl implements DaoUsers {
 
     @Override
     public boolean updateUser(User user) {
-        final String sql = "UPDATE Users SET"
-                + "firstName = ?"
-                + "lastName = ?"
-                + "userName = ?"
-                + "userRole = ?"
+        final String sql = "UPDATE Users SET firstName = ?"
+                + ", lastName = ?"
+                + ", userName = ?"
+                + ", userRole = ?"
                 + "WHERE userID = ?";
         return jdbc.update(sql, 
                 user.getFirstName(),
@@ -76,6 +75,12 @@ public class DaoUsersImpl implements DaoUsers {
     public List<User> getAllUsers() {
         final String sql = "SELECT userID, firstName, lastName, userName, userPassword, userRole FROM Users";
         return jdbc.query(sql, new UserMapper());
+    }
+    
+    @Override 
+    public boolean deleteUserById(int userID){
+        final String sql = "DELETE FROM users WHERE userID = ?";
+        return jdbc.update(sql, userID) > 0;
     }
     
     private static final class UserMapper implements RowMapper<User> {

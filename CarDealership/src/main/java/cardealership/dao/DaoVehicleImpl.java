@@ -84,7 +84,8 @@ public class DaoVehicleImpl implements DaoVehicle {
                 + "salesPrice = ?, "
                 + "vehicleDesc = ?, "
                 + "saleStatus = ?, "
-                + "specialID = ?; ";
+                + "specialID = ? "
+                + "WHERE vehicleID = ?";
                 
         
         return jdbc.update(sql,
@@ -100,7 +101,8 @@ public class DaoVehicleImpl implements DaoVehicle {
                 vehicle.getSalesPrice(),
                 vehicle.getVehicleDesc(),
                 vehicle.getSalesStatus(),
-                vehicle.getSpecialID()) > 0;
+                vehicle.getSpecialID(),
+                vehicle.getVehicleID()) > 0;
 //        ,
 //                vehicle.getMakeID())
     }

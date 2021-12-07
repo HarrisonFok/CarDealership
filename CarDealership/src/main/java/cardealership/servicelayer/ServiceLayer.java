@@ -76,13 +76,13 @@ public interface ServiceLayer {
     
     //Find sales between dates and associated with user
     //either-or start and end can be null
-    public List<Sale> getSalesInRangeAndUser(LocalDate start, LocalDate end, User user);
+    public List<Sale> getSalesInRangeAndUser(LocalDate start, LocalDate end, int userID);
     
     //Search for sales related by user
-    public List<Sale> getSalesInByUser(User user);
+    public List<Sale> getSalesInByUser(int userID);
     
     //simply returns sum of sales given
-    public BigDecimal totalNumberOfSales(List<Sale> sales);
+    public BigDecimal totalOfSales(List<Sale> sales);
     
     //WIll return a string with total number of vevicles sold,
     // as well as how many of each model and make
@@ -90,7 +90,7 @@ public interface ServiceLayer {
     
     //cheks if purchase price is no less than 95% of sale price
     // and purchase price is no larger than MSRP
-    public String checkIfValidPurchasePrice(Sale newSale, Vehicle boughtVehicle);
+    public boolean validPurchasePrice(Sale newSale);
     
     public boolean validZip(Sale newSale);
     

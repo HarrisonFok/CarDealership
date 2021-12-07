@@ -25,7 +25,7 @@ public class DaoSpecialsImpl implements DaoSpecials {
     @Override
     public Special addSpecial(Special newSpecial) {
         // SQL statement to add a sale
-        final String sql = "INSERT INTO Sales(email, phone, street, zipCode, purchasePrice, purchaseType, userID, vehicleID) VALUES (?,?,?,?,?,?,?,?)";
+        final String sql = "INSERT INTO specials(startDate, endDate, discount) VALUES (?,?,?)";
         GeneratedKeyHolder key = new GeneratedKeyHolder();
         
         jdbc.update((Connection conn) -> {

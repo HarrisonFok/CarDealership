@@ -20,5 +20,6 @@ public interface DaoContact {
     
     public boolean editContact(Contact newContact);
     
+    public boolean deleteContactById(int id);
     
 }

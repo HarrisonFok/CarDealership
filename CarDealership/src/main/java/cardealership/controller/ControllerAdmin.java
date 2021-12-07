@@ -19,6 +19,7 @@ import java.util.Date;
 import java.util.List;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.annotation.ComponentScan;
+import org.springframework.format.annotation.DateTimeFormat;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.DeleteMapping;
@@ -28,6 +29,7 @@ import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.PutMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 
 /**
@@ -139,7 +141,11 @@ public class ControllerAdmin {
     //=====Specials Methods =====
     
     @PostMapping("/addSpecial")
-    public Special addSpecial(LocalDate start, LocalDate end, String discount){
+    public Special addSpecial(@RequestParam("start")
+                                  @DateTimeFormat(iso = DateTimeFormat.ISO.DATE) LocalDate start,
+                              @RequestParam("end")
+                              @DateTimeFormat(iso = DateTimeFormat.ISO.DATE)LocalDate end,
+                              String discount){
         Special newSpecial = new Special();
 
         newSpecial.setStartDate(Date.from(start.atStartOfDay(ZoneId.systemDefault()).toInstant()));
@@ -147,6 +153,16 @@ public class ControllerAdmin {
         newSpecial.setDiscount(discount);
         return service.addSpecial(newSpecial);
     }
+    
+//    @PostMapping("/addSpecial")
+//    public Special addSpecial(LocalDate start, LocalDate end, String discount){
+//        Special newSpecial = new Special();
+//
+//        newSpecial.setStartDate(Date.from(start.atStartOfDay(ZoneId.systemDefault()).toInstant()));
+//        newSpecial.setEndDate(Date.from(end.atStartOfDay(ZoneId.systemDefault()).toInstant()));
+//        newSpecial.setDiscount(discount);
+//        return service.addSpecial(newSpecial);
+//    }
     
     @DeleteMapping("/removeSpecial/{id}")
     public ResponseEntity<Special> delete(@PathVariable int id) {
@@ -168,7 +184,15 @@ public class ControllerAdmin {
         
         newVehicle.setModelID(modelId);
         newVehicle.setVehicleType(vehicleType);
+        if(!vehicleType.equalsIgnoreCase("new") && !vehicleType.equalsIgnoreCase("used")){
+            return ResponseHandler.generateResponse(
+                    "Error: Invalid body type, must be used or new", HttpStatus.MULTI_STATUS, null);
+        }
         newVehicle.setBodyStyle(bodyStyle);
+        if(!bodyStyle.equalsIgnoreCase("car") && !bodyStyle.equalsIgnoreCase("SUV") && !bodyStyle.equalsIgnoreCase("Truck") && !bodyStyle.equalsIgnoreCase("Van")){
+            return ResponseHandler.generateResponse(
+                    "Error: Invalid body style, must be car, SUV, truck, or van", HttpStatus.MULTI_STATUS, null);
+        }
         newVehicle.setVehicleYear(vehicleYear);
         if(!service.validYear(newVehicle)){
             return ResponseHandler.generateResponse(
@@ -182,6 +206,12 @@ public class ControllerAdmin {
         }
         
         newVehicle.setColour(colour);
+        if(!colour.equalsIgnoreCase("red") && !colour.equalsIgnoreCase("blue") && !colour.equalsIgnoreCase("black")
+                && !colour.equalsIgnoreCase("white") && !colour.equalsIgnoreCase("green")){
+            //colour must be one of 5 colours
+            return ResponseHandler.generateResponse(
+                    "Error: Invalid colour", HttpStatus.MULTI_STATUS, null);
+        }
         newVehicle.setMileage(mileage);
         if(newVehicle.getVehicleType().equalsIgnoreCase("new")){
             if(!service.validNewVehicle(newVehicle)){
@@ -191,12 +221,24 @@ public class ControllerAdmin {
             }
         }
         newVehicle.setVin(vin);
+        if(vin.isEmpty()){
+            return ResponseHandler.generateResponse(
+                    "Error: VIN cannot be empty", HttpStatus.MULTI_STATUS, null);
+        }
         newVehicle.setMsrp(msrp);
+        if(Integer.parseInt(msrp) < 1){
+            return ResponseHandler.generateResponse(
+                    "Error: MSRP must be a positive number", HttpStatus.MULTI_STATUS, null);
+        }
         newVehicle.setSalesPrice(salesPrice);
         if(!service.validSalePrice(newVehicle)){
             return ResponseHandler.generateResponse(
                 "Error: Sale price must be less than MSRP", 
                     HttpStatus.MULTI_STATUS, null); 
+        }
+        else if(Integer.parseInt(salesPrice) < 1){
+            return ResponseHandler.generateResponse(
+                    "Error: sales price must be a positive number", HttpStatus.MULTI_STATUS, null);
         }
         if(vehicleDesc == null || vehicleDesc.length() == 0){
             return ResponseHandler.generateResponse(
@@ -211,6 +253,59 @@ public class ControllerAdmin {
         //return daoVehicle.addVehicle(newVehicle);
         return ResponseHandler.generateResponse("Successfully added Vehicle!", HttpStatus.OK, newVehicle);
     }
+    
+//    @PostMapping("addVehicle")
+//    public ResponseEntity<Object> addVehicle(int modelId, String vehicleType, String bodyStyle,
+//            int vehicleYear,String transmission, String colour, int mileage, String vin, 
+//            String msrp, String salesPrice, String vehicleDesc, String saleStatus, int specialId){
+//        
+//        Vehicle newVehicle = new Vehicle();
+//        
+//        newVehicle.setModelID(modelId);
+//        newVehicle.setVehicleType(vehicleType);
+//        newVehicle.setBodyStyle(bodyStyle);
+//        newVehicle.setVehicleYear(vehicleYear);
+//        if(!service.validYear(newVehicle)){
+//            return ResponseHandler.generateResponse(
+//                    "Error: Invalid year", HttpStatus.MULTI_STATUS, null);
+//        }
+//        newVehicle.setTransmission(transmission);
+//        if(!service.validTransmission(newVehicle)){
+//            //Type must be automatic or manual
+//            return ResponseHandler.generateResponse(
+//                    "Error: Invalid transmission type", HttpStatus.MULTI_STATUS, null);
+//        }
+//        
+//        newVehicle.setColour(colour);
+//        newVehicle.setMileage(mileage);
+//        if(newVehicle.getVehicleType().equalsIgnoreCase("new")){
+//            if(!service.validNewVehicle(newVehicle)){
+//               return ResponseHandler.generateResponse(
+//                    "Error: Car cannot be new with more than 1000 mileage", 
+//                       HttpStatus.MULTI_STATUS, null); 
+//            }
+//        }
+//        newVehicle.setVin(vin);
+//        newVehicle.setMsrp(msrp);
+//        newVehicle.setSalesPrice(salesPrice);
+//        if(!service.validSalePrice(newVehicle)){
+//            return ResponseHandler.generateResponse(
+//                "Error: Sale price must be less than MSRP", 
+//                    HttpStatus.MULTI_STATUS, null); 
+//        }
+//        if(vehicleDesc == null || vehicleDesc.length() == 0){
+//            return ResponseHandler.generateResponse(
+//                "Error: Vehicle must have a description", 
+//                    HttpStatus.MULTI_STATUS, null); 
+//        }
+//        newVehicle.setVehicleDesc(vehicleDesc);
+//        newVehicle.setSalesStatus(saleStatus);
+//        newVehicle.setSpecialID(specialId);
+//        
+//        service.addVehicle(newVehicle);
+//        //return daoVehicle.addVehicle(newVehicle);
+//        return ResponseHandler.generateResponse("Successfully added Vehicle!", HttpStatus.OK, newVehicle);
+//    }
     
 //    @PostMapping("addVehicle")
 //    public Vehicle addVehicle(int modelId, String vehicleType, String bodyStyle,
@@ -291,9 +386,12 @@ public class ControllerAdmin {
         return ResponseHandler.generateResponse("Successfully edited Vehicle!", HttpStatus.OK, vehicle);
     }
     
-    @PutMapping("remoVehicle/{vehicleId}")
-    public boolean removeVehicle(@PathVariable int vehicleId) {
-        return service.removeVehicle(vehicleId);
+    @DeleteMapping("removeVehicle/{vehicleId}")
+    public ResponseEntity removeVehicle(@PathVariable int vehicleId) {
+        if (service.removeVehicle(vehicleId)){
+            return new ResponseEntity(HttpStatus.NO_CONTENT);
+        }
+        return new ResponseEntity(HttpStatus.NOT_FOUND);
     }
     
     @GetMapping("/getVehiclesSold")
