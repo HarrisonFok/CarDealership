@@ -76,7 +76,13 @@ public class DaoUsersImpl implements DaoUsers {
         final String sql = "SELECT userID, firstName, lastName, userName, userPassword, userRole FROM Users";
         return jdbc.query(sql, new UserMapper());
     }
-    
+
+    @Override
+    public boolean removeUser(int userID) {
+        final String sql = "DELETE FROM users WHERE userID = ?";
+        return jdbc.update(sql, userID) > 0;
+    }
+
     private static final class UserMapper implements RowMapper<User> {
 
         @Override
