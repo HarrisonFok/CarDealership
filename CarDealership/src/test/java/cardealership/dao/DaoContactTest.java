@@ -2,6 +2,8 @@ package cardealership.dao;
 
 import cardealership.TestApplicationConfiguration;
 import cardealership.dto.Contact;
+import cardealership.dto.Make;
+import cardealership.dto.Model;
 import cardealership.dto.Vehicle;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
@@ -24,6 +26,12 @@ public class DaoContactTest {
     @Autowired
     DaoVehicle vehicleDao;
 
+    @Autowired
+    DaoModel modelDao;
+
+    @Autowired
+    DaoMake makeDao;
+
 
     public DaoContactTest() {
     }
@@ -35,11 +43,36 @@ public class DaoContactTest {
         for(Contact contact : contacts) {
             contactDao.removeContact(contact.getContactID());
         }
+
+        List<Vehicle> vehicles = vehicleDao.getAllVehicles();
+        for(Vehicle vehicle : vehicles) {
+            vehicleDao.removeVehicle(vehicle.getVehicleID());
+        }
+
+        List<Model> models = modelDao.getAllModels();
+        for(Model model : models) {
+            modelDao.removeModel(model.getModelID());
+        }
+
+        List<Make> makes = makeDao.getAllMakes();
+        for(Make make : makes) {
+            makeDao.removeMake(make.getMakeID());
+        }
+
     }
 
 
     @Test
     public void testAddGetContact() {
+        Make make = new Make();
+        make.setVehicleMake("test make");
+        makeDao.addMake(make);
+
+        Model model = new Model();
+        model.setMakeID(1);
+        model.setVehicleModel("test model");
+        model.setMakeID(make.getMakeID());
+        modelDao.addModel(model);
 
         Vehicle vehicle = new Vehicle();
         vehicle.setSalesStatus("sold");
@@ -53,7 +86,7 @@ public class DaoContactTest {
         vehicle.setVehicleYear(2020);
         vehicle.setVin("GF52D");
         vehicle.setVehicleDesc("test vehicle");
-        vehicle.setModelID(1);
+        vehicle.setModelID(model.getModelID());
         vehicle.setSpecialID(1);
         vehicleDao.addVehicle(vehicle);
 
@@ -86,6 +119,17 @@ public class DaoContactTest {
 
     @Test
     public void testEditContact() {
+        Make make = new Make();
+        make.setVehicleMake("test make");
+        makeDao.addMake(make);
+
+        Model model = new Model();
+        model.setMakeID(1);
+        model.setVehicleModel("test model");
+        model.setMakeID(make.getMakeID());
+        modelDao.addModel(model);
+
+
         Vehicle vehicle = new Vehicle();
         vehicle.setSalesStatus("sold");
         vehicle.setBodyStyle("car");
@@ -98,7 +142,7 @@ public class DaoContactTest {
         vehicle.setVehicleYear(2020);
         vehicle.setVin("GF52D");
         vehicle.setVehicleDesc("test vehicle");
-        vehicle.setModelID(1);
+        vehicle.setModelID(model.getModelID());
         vehicle.setSpecialID(1);
         vehicleDao.addVehicle(vehicle);
 

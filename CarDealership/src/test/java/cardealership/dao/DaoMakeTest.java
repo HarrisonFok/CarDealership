@@ -3,6 +3,8 @@ package cardealership.dao;
 import cardealership.TestApplicationConfiguration;
 import cardealership.dto.Contact;
 import cardealership.dto.Make;
+import cardealership.dto.Model;
+import cardealership.dto.Vehicle;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -22,7 +24,13 @@ public class DaoMakeTest {
     DaoMake makeDao;
 
     @Autowired
+    DaoModel modelDao;
+
+    @Autowired
     DaoVehicle vehicleDao;
+
+    @Autowired
+    DaoContact contactDao;
 
 
     public DaoMakeTest() {
@@ -30,6 +38,21 @@ public class DaoMakeTest {
 
     @BeforeEach
     public void setUp() {
+
+        List<Contact> contacts = contactDao.getAllContacts();
+        for(Contact contact : contacts) {
+            contactDao.removeContact(contact.getContactID());
+        }
+
+        List<Vehicle> vehicles = vehicleDao.getAllVehicles();
+        for(Vehicle vehicle : vehicles) {
+            vehicleDao.removeVehicle(vehicle.getVehicleID());
+        }
+
+        List<Model> models = modelDao.getAllModels();
+        for(Model model : models) {
+            modelDao.removeModel(model.getModelID());
+        }
         List<Make> makes = makeDao.getAllMakes();
         for(Make make : makes) {
             makeDao.removeMake(make.getMakeID());
