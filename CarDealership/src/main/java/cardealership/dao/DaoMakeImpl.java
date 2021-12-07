@@ -50,7 +50,13 @@ public class DaoMakeImpl implements DaoMake {
         newMake.setMakeID(key.getKey().intValue());
         return newMake;
     }
-    
+
+    @Override
+    public boolean removeMake(int makeID) {
+        final String sql = "DELETE FROM make WHERE makeID = ?";
+        return jdbc.update(sql, makeID) > 0;
+    }
+
     private static final class MakeMapper implements RowMapper<Make> {
 
         @Override

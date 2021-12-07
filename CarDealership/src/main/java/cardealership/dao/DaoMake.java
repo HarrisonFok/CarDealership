@@ -19,4 +19,6 @@ public interface DaoMake {
     public List<Make> getAllMakes(); 
     
     public Make addMake(Make newMake);
+
+    boolean removeMake(int makeID);
 }
