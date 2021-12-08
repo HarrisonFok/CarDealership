@@ -256,9 +256,9 @@ public class ServiceLayerImpl implements ServiceLayer {
     public List<Sale> getSalesInRange(LocalDate start, LocalDate end){
         List<Sale> allSales = daoSales.getAllSales();
         List<Sale> salesReport = allSales.stream()
-                .filter((s) -> s.getSaleDate().compareTo(start) >= 0 
+                .filter((s) -> s.getSaleDate().compareTo(start) > 0 
                                 &&
-                               s.getSaleDate().compareTo(end)   <= 0)
+                               s.getSaleDate().compareTo(end)   < 0)
                 .collect(Collectors.toList());
         return salesReport;
     }
@@ -267,25 +267,18 @@ public class ServiceLayerImpl implements ServiceLayer {
     //either-or start and end can be null
     @Override
     public List<Sale> getSalesInRangeAndUser(LocalDate start, LocalDate end, 
-            int userID){
-        List<Sale> salesByUser = getSalesInByUser(userID);
-        
-//        List<Sale> dateSalesList = getSalesInRange(start,end);
-        
-        List<Sale> filterSaleList = salesByUser.stream()
-                .filter((s) -> s.getSaleDate().compareTo(start) >= 0
-                            && s.getSaleDate().compareTo(end) <= 0)
-                .collect(Collectors.toList());
-        
+            User user){
+        List<Sale> salesByUser = getSalesInByUser(user);
+        List<Sale> filterSaleList = getSalesInRange(start,end);
         return filterSaleList;
     }
     
     //Search for sales related by user
     @Override
-    public List<Sale> getSalesInByUser(int userID){
+    public List<Sale> getSalesInByUser(User user){
         List<Sale> sales = daoSales.getAllSales();
         List<Sale> saleByUser = sales.stream()
-                .filter((s) -> s.getUserID() == userID)
+                .filter((s) -> s.getUserID() == user.getUserID())
                 .collect(Collectors.toList());
         return saleByUser;
         
@@ -294,14 +287,12 @@ public class ServiceLayerImpl implements ServiceLayer {
     
     //simply returns sum of sales given
     @Override
-    public BigDecimal totalOfSales(List<Sale> sales){
+    public BigDecimal totalNumberOfSales(List<Sale> sales){
         BigDecimal sum = new BigDecimal("0.0");
         BigDecimal pPrice;
         for(int i = 0; i < sales.size(); i++){
             pPrice = new BigDecimal(sales.get(i).getPurchasePrice());
-//            System.out.println("\n====== pPrice: " + pPrice + " ======\n");
-            sum = sum.add(pPrice);
-//            System.out.println("\n====== sum: " + sum + " ======\n");
+            sum.add(pPrice);
         }
         sum.setScale(2, RoundingMode.HALF_UP);
         return sum;
@@ -350,22 +341,21 @@ public class ServiceLayerImpl implements ServiceLayer {
     //cheks if purchase price is no less than 95% of sale price
     // and purchase price is no larger than MSRP
     @Override
-    public boolean validPurchasePrice(Sale newSale){
-        Vehicle boughtVehicle = daoVehicle.getVehicle(newSale.getVehicleID());
+    public String checkIfValidPurchasePrice(Sale newSale, Vehicle boughtVehicle){
         BigDecimal ninetyFivePercent = new BigDecimal("0.95");
         BigDecimal salePrice = new BigDecimal(boughtVehicle.getSalesPrice());
         BigDecimal purchasePrice = new BigDecimal(newSale.getPurchasePrice());
         BigDecimal msrp = new BigDecimal(boughtVehicle.getMsrp());
         
         if(purchasePrice.compareTo(salePrice.multiply(ninetyFivePercent)) < 0){
-            return false;//"Error: purchase price is less than 95% of sale price";
+            return "Error: purchase price is less than 95% of sale price";
         }else if(purchasePrice.compareTo(msrp) > 0){
-            return false;//"Error: purchase price is no larger than MSRP.\n" +
-//                    "purchase price: " + newSale.getPurchasePrice() +
-//                    "\n MSRP: " + boughtVehicle.getMsrp();
+            return "Error: purchase price is no larger than MSRP.\n" +
+                    "purchase price: " + newSale.getPurchasePrice() +
+                    "\n MSRP: " + boughtVehicle.getMsrp();
         }
         
-        return true;//"Sale is valid";
+        return "Sale is valid";
     }
     
     //tests if zip is 5 digits
@@ -472,12 +462,12 @@ public class ServiceLayerImpl implements ServiceLayer {
         List<Vehicle> inventory = daoVehicle.getAllVehiclesForSale();
         
         List<Vehicle> inventoryIndex = inventory.stream()
-                .filter((s) -> s.getSalesStatus().equalsIgnoreCase("in stock"))
+                .filter((s) -> s.getSalesStatus().equalsIgnoreCase("new"))
                 .collect(Collectors.toList());
         
-//        inventoryIndex.addAll(inventory.stream()
-//                .filter((s) -> s.getSalesStatus().equalsIgnoreCase("used"))
-//                .collect(Collectors.toList()));
+        inventoryIndex.addAll(inventory.stream()
+                .filter((s) -> s.getSalesStatus().equalsIgnoreCase("used"))
+                .collect(Collectors.toList()));
         
         return inventoryIndex;
     }

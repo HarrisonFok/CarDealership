@@ -16,13 +16,6 @@ public class Make {
     private String vehicleMake;
 //    private int modelID;
 
-    public Make(int makeID, String vehicleMake) {
-        this.makeID = makeID;
-        this.vehicleMake = vehicleMake;
-    }
-
-    
-    
     public int getMakeID() {
         return makeID;
     }

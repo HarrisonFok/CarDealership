@@ -1,4 +1,3 @@
-cardealership\TestApplicationConfiguration.class
 cardealership\dao\DaoMakeImpl.class
 cardealership\dao\DaoContactImpl.class
 cardealership\dao\DaoSpecials.class
@@ -13,7 +12,6 @@ cardealership\controller\ControllerAdmin.class
 cardealership\servicelayer\ServiceLayer.class
 cardealership\dao\DaoContact.class
 cardealership\dao\DaoModelImpl$ModelMapper.class
-cardealership\dao\DaoVehicleImpl$ModelMapper.class
 cardealership\dto\Contact.class
 cardealership\dto\Special.class
 cardealership\dao\DaoSales.class
