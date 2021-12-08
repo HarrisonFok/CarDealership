@@ -5,12 +5,8 @@
 package cardealership.dao;
 
 import cardealership.TestApplicationConfiguration;
-import cardealership.dto.Make;
-import cardealership.dto.Model;
-import cardealership.dto.Sale;
-import cardealership.dto.Special;
-import cardealership.dto.User;
-import cardealership.dto.Vehicle;
+import cardealership.dto.*;
+
 import java.time.Instant;
 import java.time.LocalDate;
 import java.util.Calendar;
@@ -51,6 +47,9 @@ public class DaoSpecialsImplTest {
     
     @Autowired
     DaoMakeImpl makeDao;
+
+    @Autowired
+    DaoContact contactDao;
     
     public DaoSpecialsImplTest() {
     }
@@ -62,6 +61,11 @@ public class DaoSpecialsImplTest {
         for (Sale sale: sales) {
             salesDao.removeSale(sale.getSaleID());
         }
+        List<Contact> contacts = contactDao.getAllContacts();
+        for(Contact contact : contacts) {
+            contactDao.removeContact(contact.getContactID());
+        }
+
         List<Vehicle> vehicles = daoVehicle.getAllVehicles();
         for (Vehicle vehicle: vehicles) {
             daoVehicle.removeVehicle(vehicle.getVehicleID());

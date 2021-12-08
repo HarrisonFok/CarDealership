@@ -5,6 +5,7 @@
 package cardealership.dao;
 
 import cardealership.TestApplicationConfiguration;
+import cardealership.dto.Sale;
 import cardealership.dto.User;
 import java.util.List;
 import org.junit.jupiter.api.AfterEach;
@@ -26,12 +27,20 @@ public class DaoUsersImplTest {
     
     @Autowired
     DaoUsers daoUsers;
+
+    @Autowired
+    DaoSales salesDao;
     
     public DaoUsersImplTest() {
     }
     
     @BeforeEach
     public void setUp() {
+        List<Sale> sales = salesDao.getAllSales();
+        for (Sale sale: sales) {
+            salesDao.removeSale(sale.getSaleID());
+        }
+
         List<User> users = daoUsers.getAllUsers();
         for (User user: users) {
             daoUsers.removeUser(user.getUserID());

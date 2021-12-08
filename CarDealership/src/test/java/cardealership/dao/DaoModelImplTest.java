@@ -1,10 +1,7 @@
 
 package cardealership.dao;
 import cardealership.TestApplicationConfiguration;
-import cardealership.dto.Contact;
-import cardealership.dto.Make;
-import cardealership.dto.Model;
-import cardealership.dto.Vehicle;
+import cardealership.dto.*;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -34,21 +31,32 @@ public class DaoModelImplTest {
     @Autowired
     DaoModel modelDao;
 
+    @Autowired
+    DaoSales salesDao;
 
- public DaoModelImplTest() {
+
+
+
+    public DaoModelImplTest() {
     }
 
     @BeforeEach
     public void setUp() {
-        List<Vehicle> vehicles = vehicleDao.getAllVehicles();
-        for(Vehicle vehicle : vehicles) {
-            vehicleDao.removeVehicle(vehicle.getVehicleID());
+
+        List<Sale> sales = salesDao.getAllSales();
+        for (Sale sale: sales) {
+            salesDao.removeSale(sale.getSaleID());
         }
-List<Contact> contacts = contactDao.getAllContacts();
+
+        List<Contact> contacts = contactDao.getAllContacts();
         for(Contact contact : contacts) {
             contactDao.removeContact(contact.getContactID());
         }
 
+        List<Vehicle> vehicles = vehicleDao.getAllVehicles();
+        for(Vehicle vehicle : vehicles) {
+            vehicleDao.removeVehicle(vehicle.getVehicleID());
+        }
         
        
         List<Model> models = modelDao.getAllModels();

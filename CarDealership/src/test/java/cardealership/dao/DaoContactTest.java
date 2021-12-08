@@ -1,18 +1,15 @@
 package cardealership.dao;
 
 import cardealership.TestApplicationConfiguration;
-import cardealership.dto.Contact;
-import cardealership.dto.Make;
-import cardealership.dto.Model;
-import cardealership.dto.Vehicle;
+import cardealership.dto.*;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.test.context.junit4.SpringRunner;
 
-import java.util.ArrayList;
-import java.util.List;
+import java.time.LocalDate;
+import java.util.*;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertNotNull;
@@ -32,12 +29,26 @@ public class DaoContactTest {
     @Autowired
     DaoMake makeDao;
 
+    @Autowired
+    DaoUsers usersDao;
+
+    @Autowired
+    DaoSales salesDao;
+
+    @Autowired
+    DaoSpecials specialsDao;
+
 
     public DaoContactTest() {
     }
 
     @BeforeEach
     public void setUp() {
+
+        List<Sale> sales = salesDao.getAllSales();
+        for (Sale sale: sales) {
+            salesDao.removeSale(sale.getSaleID());
+        }
 
         List<Contact> contacts = contactDao.getAllContacts();
         for(Contact contact : contacts) {
@@ -58,18 +69,43 @@ public class DaoContactTest {
         for(Make make : makes) {
             makeDao.removeMake(make.getMakeID());
         }
+        List<User> users = usersDao.getAllUsers();
+        for (User user: users) {
+            usersDao.removeUser(user.getUserID());
+        }
+        List<Special> specials = specialsDao.getAllSpecials();
+        for (Special special: specials) {
+            specialsDao.removeSpecial(special.getSpecialID());
+        }
 
     }
 
 
     @Test
     public void testAddGetContact() {
+        Special special = new Special();
+        special.setDiscount("Great 20%!!!!");
+        Calendar C = new GregorianCalendar(2021,Calendar.DECEMBER,21);
+        Calendar CTwo = new GregorianCalendar(2021,Calendar.DECEMBER,25);
+        Date DD = C.getTime();
+        Date DDTwo = CTwo.getTime();
+        special.setStartDate(DD);
+        special.setEndDate(DDTwo);
+        specialsDao.addSpecial(special);
+
+        User newUser = new User();
+        newUser.setFirstName("Bob");
+        newUser.setLastName("Zuckerberg");
+        newUser.setUserName("zucker");
+        newUser.setUserPassword("iambob");
+        newUser.setUserRole("Admin");
+        usersDao.addUser(newUser);
+
         Make make = new Make();
         make.setVehicleMake("test make");
         makeDao.addMake(make);
 
         Model model = new Model();
-        model.setMakeID(1);
         model.setVehicleModel("test model");
         model.setMakeID(make.getMakeID());
         modelDao.addModel(model);
@@ -87,8 +123,20 @@ public class DaoContactTest {
         vehicle.setVin("GF52D");
         vehicle.setVehicleDesc("test vehicle");
         vehicle.setModelID(model.getModelID());
-        vehicle.setSpecialID(1);
+        vehicle.setSpecialID(special.getSpecialID());
         vehicleDao.addVehicle(vehicle);
+
+        Sale sale = new Sale();
+        sale.setEmail("ROBERT@GMAIL.COM");
+        sale.setPhone("343-554-5234");
+        sale.setStreet("4 Sample lane");
+        sale.setZipCode(33755);
+        sale.setPurchasePrice("4000");
+        sale.setPurchaseType("cash");
+        sale.setUserID(newUser.getUserID());
+        sale.setVehicleID(vehicle.getVehicleID());
+        sale.setSaleDate(LocalDate.now());
+        salesDao.addSale(sale);
 
 
         Contact contact = new Contact();
@@ -119,6 +167,24 @@ public class DaoContactTest {
 
     @Test
     public void testEditContact() {
+        Special special = new Special();
+        special.setDiscount("Great 20%!!!!");
+        Calendar C = new GregorianCalendar(2021,Calendar.DECEMBER,21);
+        Calendar CTwo = new GregorianCalendar(2021,Calendar.DECEMBER,25);
+        Date DD = C.getTime();
+        Date DDTwo = CTwo.getTime();
+        special.setStartDate(DD);
+        special.setEndDate(DDTwo);
+        specialsDao.addSpecial(special);
+
+        User newUser = new User();
+        newUser.setFirstName("Bob");
+        newUser.setLastName("Zuckerberg");
+        newUser.setUserName("zucker");
+        newUser.setUserPassword("iambob");
+        newUser.setUserRole("Admin");
+        usersDao.addUser(newUser);
+
         Make make = new Make();
         make.setVehicleMake("test make");
         makeDao.addMake(make);
@@ -143,8 +209,9 @@ public class DaoContactTest {
         vehicle.setVin("GF52D");
         vehicle.setVehicleDesc("test vehicle");
         vehicle.setModelID(model.getModelID());
-        vehicle.setSpecialID(1);
+        vehicle.setSpecialID(special.getSpecialID());
         vehicleDao.addVehicle(vehicle);
+
 
         Contact contact = new Contact();
         contact.setContactName("test name");
