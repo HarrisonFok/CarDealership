@@ -66,6 +66,12 @@ public class DaoSalesImpl implements DaoSales {
         return jdbc.queryForObject(sql, new SalesMapper(), saleId);
     }
     
+    @Override
+    public boolean removeSale(int saleID) {
+         final String sql = "DELETE FROM sales WHERE saleID = ?";
+        return jdbc.update(sql, saleID) > 0;
+    }
+    
     private static final class SalesMapper implements RowMapper<Sale> {
         @Override
         public Sale mapRow(ResultSet rs, int rowNum) throws SQLException {

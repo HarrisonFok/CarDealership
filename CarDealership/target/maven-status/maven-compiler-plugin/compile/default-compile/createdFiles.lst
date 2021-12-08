@@ -26,7 +26,6 @@ cardealership\dao\DaoSalesImpl.class
 cardealership\controller\ControllerGeneral.class
 cardealership\dao\DaoSalesImpl$SalesMapper.class
 cardealership\dao\DaoMakeImpl$MakeMapper.class
-cardealership\dao\DaoVehicleImpl$MakeMapper.class
 cardealership\dao\DaoMake.class
 cardealership\controller\ResponseHandler.class
 cardealership\servicelayer\ServiceLayerImpl.class
