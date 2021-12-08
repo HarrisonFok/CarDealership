@@ -21,6 +21,12 @@ public class Model {
         this.vehicleModel = vehicleModel;
     }
 
+    public Model(int modelID, String vehicleModel, int makeID) {
+        this.modelID = modelID;
+        this.vehicleModel = vehicleModel;
+        this.makeID = makeID;
+    }
+
     public int getModelID() {
         return modelID;
     }

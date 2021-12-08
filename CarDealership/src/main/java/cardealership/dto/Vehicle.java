@@ -50,6 +50,26 @@ public class Vehicle {
         this.modelID = modelID;
     }
 
+    public Vehicle(int vehicleID, int modelID, String vehicleType, String bodyStyle, int vehicleYear,
+                   String colour, int mileage, String vin, String msrp, String salesPrice, String vehicleDesc,
+                   String salesStatus, int specialID, String transmission) {
+        this.vehicleID = vehicleID;
+
+        this.vehicleType = vehicleType;
+        this.bodyStyle = bodyStyle;
+        this.vehicleYear = vehicleYear;
+        this.transmission = transmission;
+        this.colour = colour;
+        this.mileage = mileage;
+        this.vin = vin;
+        this.msrp = msrp;
+        this.salesPrice = salesPrice;
+        this.vehicleDesc = vehicleDesc;
+        this.salesStatus = salesStatus;
+        this.specialID = specialID;
+        this.modelID = modelID;
+    }
+
     public int getVehicleID() {
         return vehicleID;
     }

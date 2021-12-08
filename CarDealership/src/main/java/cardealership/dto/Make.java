@@ -20,6 +20,11 @@ public class Make {
         return makeID;
     }
 
+    public Make(int makeID, String vehicleMake) {
+        this.makeID = makeID;
+        this.vehicleMake = vehicleMake;
+    }
+
     public void setMakeID(int makeID) {
         this.makeID = makeID;
     }

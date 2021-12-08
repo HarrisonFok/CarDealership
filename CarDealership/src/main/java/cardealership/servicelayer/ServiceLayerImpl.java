@@ -1,9 +1,9 @@
 /*
-*   Joshua Martel
-*   jophmartel@gmail.com
-*   
-*
-*/
+ *   Joshua Martel
+ *   jophmartel@gmail.com
+ *
+ *
+ */
 
 package cardealership.servicelayer;
 
@@ -55,8 +55,8 @@ import org.springframework.stereotype.Service;
 @ComponentScan(basePackageClasses = DaoUsersImpl.class)
 @ComponentScan(basePackageClasses = DaoVehicleImpl.class)
 public class ServiceLayerImpl implements ServiceLayer {
-    
-    
+
+
     @Autowired
     private DaoContact daoContact;
     @Autowired
@@ -71,14 +71,14 @@ public class ServiceLayerImpl implements ServiceLayer {
     private DaoUsers daoUsers;
     @Autowired
     private DaoVehicle daoVehicle;
-    
+
     public ServiceLayerImpl(){
-        
+
     }
-    
+
     public ServiceLayerImpl(DaoContact daoContact, DaoMake daoMake,
-            DaoModel daoModel, DaoSales daoSales, DaoSpecials daoSpecials,
-            DaoUsers daoUsers, DaoVehicle daoVehicle){
+                            DaoModel daoModel, DaoSales daoSales, DaoSpecials daoSpecials,
+                            DaoUsers daoUsers, DaoVehicle daoVehicle){
         this.daoContact = daoContact;
         this.daoMake = daoMake;
         this.daoModel = daoModel;
@@ -88,7 +88,7 @@ public class ServiceLayerImpl implements ServiceLayer {
         this.daoVehicle = daoVehicle;
     }
 
-     @Override
+    @Override
     public Contact addContact(Contact newContact) {
         return daoContact.addContact(newContact);
     }
@@ -202,7 +202,7 @@ public class ServiceLayerImpl implements ServiceLayer {
     public boolean updateVehicle(Vehicle vehicle) {
         return daoVehicle.updateVehicle(vehicle);
     }
-    
+
     @Override
     public Vehicle getVehicle(int vehicleID){
         return daoVehicle.getVehicle(vehicleID);
@@ -227,28 +227,28 @@ public class ServiceLayerImpl implements ServiceLayer {
     public List<Vehicle> getAllVehiclesForSale() {
         return daoVehicle.getAllVehiclesForSale();
     }
-    
+
     @Override
     public List<Vehicle> getNewVehiclesByMSRP(String type) {
         return daoVehicle.getNewVehiclesByMSRP(type);
     }
-    
+
     @Override
     public List<Vehicle> getAllVehiclesByModel(int modelId){
         daoVehicle.getAllVehiclesByModel(modelId);
         return daoVehicle.getAllVehiclesByModel(modelId);
     }
-    
+
     @Override
     public List<Vehicle> getAllVehiclesByMake(int makeId){
         return daoVehicle.getAllVehiclesByMake(makeId);
     }
-    
+
     @Override
     public List<Vehicle> getAllVehiclesByYear(int year){
         return daoVehicle.getAllVehiclesByYear(year);
     }
-    
+
     //====Business-Logic Methods====
     //Find sales between dates
     //either-or start and end can be null
@@ -256,48 +256,57 @@ public class ServiceLayerImpl implements ServiceLayer {
     public List<Sale> getSalesInRange(LocalDate start, LocalDate end){
         List<Sale> allSales = daoSales.getAllSales();
         List<Sale> salesReport = allSales.stream()
-                .filter((s) -> s.getSaleDate().compareTo(start) > 0 
-                                &&
-                               s.getSaleDate().compareTo(end)   < 0)
+                .filter((s) -> s.getSaleDate().compareTo(start) >= 0
+                        &&
+                        s.getSaleDate().compareTo(end)   <= 0)
                 .collect(Collectors.toList());
         return salesReport;
     }
-    
+
     //Find sales between dates and associated with user
     //either-or start and end can be null
     @Override
-    public List<Sale> getSalesInRangeAndUser(LocalDate start, LocalDate end, 
-            User user){
-        List<Sale> salesByUser = getSalesInByUser(user);
-        List<Sale> filterSaleList = getSalesInRange(start,end);
+    public List<Sale> getSalesInRangeAndUser(LocalDate start, LocalDate end,
+                                             int userID){
+        List<Sale> salesByUser = getSalesInByUser(userID);
+
+//        List<Sale> dateSalesList = getSalesInRange(start,end);
+
+        List<Sale> filterSaleList = salesByUser.stream()
+                .filter((s) -> s.getSaleDate().compareTo(start) >= 0
+                        && s.getSaleDate().compareTo(end) <= 0)
+                .collect(Collectors.toList());
+
         return filterSaleList;
     }
-    
+
     //Search for sales related by user
     @Override
-    public List<Sale> getSalesInByUser(User user){
+    public List<Sale> getSalesInByUser(int userID){
         List<Sale> sales = daoSales.getAllSales();
         List<Sale> saleByUser = sales.stream()
-                .filter((s) -> s.getUserID() == user.getUserID())
+                .filter((s) -> s.getUserID() == userID)
                 .collect(Collectors.toList());
         return saleByUser;
-        
-        
+
+
     }
-    
+
     //simply returns sum of sales given
     @Override
-    public BigDecimal totalNumberOfSales(List<Sale> sales){
+    public BigDecimal totalOfSales(List<Sale> sales){
         BigDecimal sum = new BigDecimal("0.0");
         BigDecimal pPrice;
         for(int i = 0; i < sales.size(); i++){
             pPrice = new BigDecimal(sales.get(i).getPurchasePrice());
-            sum.add(pPrice);
+//            System.out.println("\n====== pPrice: " + pPrice + " ======\n");
+            sum = sum.add(pPrice);
+//            System.out.println("\n====== sum: " + sum + " ======\n");
         }
         sum.setScale(2, RoundingMode.HALF_UP);
         return sum;
     }
-    
+
     //WIll return a string with total number of vehicles sold,
     // as well as how many of each model and make
     @Override
@@ -309,14 +318,14 @@ public class ServiceLayerImpl implements ServiceLayer {
         //Create array to hold all info
         List<String> fullInfo = new ArrayList();
         Map<String, Integer> amountModelsSold = new HashMap();
-        
+
         //Initialise map
         for(Model m: allModels){
-                amountModelsSold.put(m.getVehicleModel(), 0);
+            amountModelsSold.put(m.getVehicleModel(), 0);
         }
-        
+
         fullInfo.add("Total vehicles sold: " + info);
-        
+
         for(Sale s: sales){
             Vehicle tempV = daoVehicle.getVehicle(s.getVehicleID());
             for(Model m: allModels){
@@ -328,7 +337,7 @@ public class ServiceLayerImpl implements ServiceLayer {
                 }
             }
         }
-        
+
         Set<String> keyValues = amountModelsSold.keySet();
         for(String key: keyValues){
             info = "";
@@ -337,27 +346,28 @@ public class ServiceLayerImpl implements ServiceLayer {
         }
         return fullInfo;
     }
-    
+
     //cheks if purchase price is no less than 95% of sale price
     // and purchase price is no larger than MSRP
     @Override
-    public String checkIfValidPurchasePrice(Sale newSale, Vehicle boughtVehicle){
+    public boolean validPurchasePrice(Sale newSale){
+        Vehicle boughtVehicle = daoVehicle.getVehicle(newSale.getVehicleID());
         BigDecimal ninetyFivePercent = new BigDecimal("0.95");
         BigDecimal salePrice = new BigDecimal(boughtVehicle.getSalesPrice());
         BigDecimal purchasePrice = new BigDecimal(newSale.getPurchasePrice());
         BigDecimal msrp = new BigDecimal(boughtVehicle.getMsrp());
-        
+
         if(purchasePrice.compareTo(salePrice.multiply(ninetyFivePercent)) < 0){
-            return "Error: purchase price is less than 95% of sale price";
+            return false;//"Error: purchase price is less than 95% of sale price";
         }else if(purchasePrice.compareTo(msrp) > 0){
-            return "Error: purchase price is no larger than MSRP.\n" +
-                    "purchase price: " + newSale.getPurchasePrice() +
-                    "\n MSRP: " + boughtVehicle.getMsrp();
+            return false;//"Error: purchase price is no larger than MSRP.\n" +
+//                    "purchase price: " + newSale.getPurchasePrice() +
+//                    "\n MSRP: " + boughtVehicle.getMsrp();
         }
-        
-        return "Sale is valid";
+
+        return true;//"Sale is valid";
     }
-    
+
     //tests if zip is 5 digits
     @Override
     public boolean validZip(Sale newSale){
@@ -369,7 +379,7 @@ public class ServiceLayerImpl implements ServiceLayer {
         }
         return true;
     }
-    
+
     //Checks if year of vehicle is within 2000 - this year + 1;
     @Override
     public boolean validYear(Vehicle addedVehicle){
@@ -383,7 +393,7 @@ public class ServiceLayerImpl implements ServiceLayer {
         }
         return true;
     }
-    
+
     //Checks if transmission type is valid
     @Override
     public boolean validTransmission(Vehicle addedVehicle){
@@ -396,7 +406,7 @@ public class ServiceLayerImpl implements ServiceLayer {
         }
         return false;
     }
-    
+
     //checks if vehicle is new
     //can only be new if mileage is less than 1000
     @Override
@@ -409,7 +419,7 @@ public class ServiceLayerImpl implements ServiceLayer {
         }
         return true;
     }
-    
+
     //Checks if sale price is less-than/equal-to msrp
     @Override
     public boolean validSalePrice(Vehicle newVehicle){
@@ -420,18 +430,18 @@ public class ServiceLayerImpl implements ServiceLayer {
         }
         return true;
     }
-    
+
     //Checks that email is in a valid fotmat
-    //This code is from an internet source: 
+    //This code is from an internet source:
     //https://stackoverflow.com/questions/624581/what-is-the-best-java-email-address-validation-method
     @Override
     public boolean validEmail(String email) {
-           String ePattern = "^[a-zA-Z0-9.!#$%&'*+/=?^_`{|}~-]+@((\\[[0-9]{1,3}\\.[0-9]{1,3}\\.[0-9]{1,3}\\.[0-9]{1,3}\\])|(([a-zA-Z\\-0-9]+\\.)+[a-zA-Z]{2,}))$";
-           java.util.regex.Pattern p = java.util.regex.Pattern.compile(ePattern);
-           java.util.regex.Matcher m = p.matcher(email);
-           return m.matches();
+        String ePattern = "^[a-zA-Z0-9.!#$%&'*+/=?^_`{|}~-]+@((\\[[0-9]{1,3}\\.[0-9]{1,3}\\.[0-9]{1,3}\\.[0-9]{1,3}\\])|(([a-zA-Z\\-0-9]+\\.)+[a-zA-Z]{2,}))$";
+        java.util.regex.Pattern p = java.util.regex.Pattern.compile(ePattern);
+        java.util.regex.Matcher m = p.matcher(email);
+        return m.matches();
     }
-    
+
     @Override
     public boolean validPurchaseType(Sale sale){
         if(sale.getPurchaseType().equalsIgnoreCase("Bank Finance")){
@@ -443,7 +453,7 @@ public class ServiceLayerImpl implements ServiceLayer {
         }
         return false;
     }
-    
+
     @Override
     public boolean validVehicleForSale(int vehicleID){
         Vehicle vec = daoVehicle.getVehicle(vehicleID);
@@ -452,26 +462,26 @@ public class ServiceLayerImpl implements ServiceLayer {
         }
         return true;
     }
-    
-    
+
+
     //====Sales Methods====
     @Override
-    
-    //Get all used and new cars for 
+
+    //Get all used and new cars for
     public List<Vehicle> getInventoryIndex(){
         List<Vehicle> inventory = daoVehicle.getAllVehiclesForSale();
-        
+
         List<Vehicle> inventoryIndex = inventory.stream()
-                .filter((s) -> s.getSalesStatus().equalsIgnoreCase("new"))
+                .filter((s) -> s.getSalesStatus().equalsIgnoreCase("in stock"))
                 .collect(Collectors.toList());
-        
-        inventoryIndex.addAll(inventory.stream()
-                .filter((s) -> s.getSalesStatus().equalsIgnoreCase("used"))
-                .collect(Collectors.toList()));
-        
+
+//        inventoryIndex.addAll(inventory.stream()
+//                .filter((s) -> s.getSalesStatus().equalsIgnoreCase("used"))
+//                .collect(Collectors.toList()));
+
         return inventoryIndex;
     }
-    
-    
-    
+
+
+
 }
