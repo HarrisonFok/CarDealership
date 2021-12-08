@@ -49,13 +49,13 @@ public class DaoModelImpl implements DaoModel {
         newModel.setModelID(key.getKey().intValue());
         return newModel;
     }
-    
+
     @Override
     public boolean removeModel(int modelID) {
         final String sql = "DELETE FROM model WHERE modelID = ?";
         return jdbc.update(sql, modelID) > 0;
     }
-    
+
     private static final class ModelMapper implements RowMapper<Model> {
 
         @Override

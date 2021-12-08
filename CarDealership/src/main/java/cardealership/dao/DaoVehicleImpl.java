@@ -176,13 +176,13 @@ public class DaoVehicleImpl implements DaoVehicle {
         final String GET_BY_YEAR = "SELECT * FROM vehicle WHERE vehicleYear = ?";
         return jdbc.query(GET_BY_YEAR, new VehicleMapper(), year);
     }
-    
+
     @Override
     public List<Vehicle> getAllVehicles() {
         final String GET_BY_YEAR = "SELECT * FROM vehicle";
         return jdbc.query(GET_BY_YEAR, new VehicleMapper());
     }
-    
+
     public static final class VehicleMapper implements RowMapper<Vehicle>{
 
         @Override

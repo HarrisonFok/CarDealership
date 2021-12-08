@@ -22,6 +22,9 @@ import cardealership.dto.Vehicle;
 import java.math.BigDecimal;
 import java.time.LocalDate;
 import java.time.Month;
+import java.util.Calendar;
+import java.util.Date;
+import java.util.GregorianCalendar;
 import java.util.List;
 import org.junit.jupiter.api.AfterEach;
 import static org.junit.jupiter.api.Assertions.assertEquals;
@@ -73,12 +76,12 @@ public class ServiceLayerImplTest {
     public void setUp(){
         List<Sale> sales = daoSales.getAllSales();
         for (Sale sale: sales) {
-            daoSales.deleteSaleById(sale.getSaleID());
+            daoSales.removeSale(sale.getSaleID());
         }
         
         List<User> users = daoUsers.getAllUsers();
         for (User user: users) {
-            daoUsers.deleteUserById(user.getUserID());
+            daoUsers.removeUser(user.getUserID());
         }
         List<Vehicle> vehicles = daoVehicle.getAllVehicles();
         for (Vehicle vehicle: vehicles) {
@@ -95,9 +98,13 @@ public class ServiceLayerImplTest {
         }
         
         Make make = service.addMake(new Make(1,"Honda"));
-        
+
+        Calendar C = new GregorianCalendar(2021,Calendar.DECEMBER,21);
+        Calendar CTwo = new GregorianCalendar(2021,Calendar.DECEMBER,25);
+        Date DD = C.getTime();
+        Date DDTwo = CTwo.getTime();
         Model model = service.addModel(new Model(make.getMakeID(),"Fit",make.getMakeID()));
-        Special sp = service.addSpecial(new Special(1, null,null, "none"));
+        Special sp = service.addSpecial(new Special(1, DD,DDTwo, "none"));
         
         service.addVehicle(new Vehicle(1, model.getModelID(), "New", "Car", 2021, "Rouge", 300, "12DGS543F",
 			"15000","14000", "new Honda car","Sold", sp.getSpecialID(), "automatic"));
@@ -137,17 +144,17 @@ public class ServiceLayerImplTest {
         //createa dates for test
         LocalDate march = LocalDate.of(2000, Month.MARCH, 1);
         LocalDate june =LocalDate.of(2000, Month.JUNE, 1);
-        LocalDate july = LocalDate.of(2000, 07, 1);
+        LocalDate july = LocalDate.of(2000, Month.JULY, 1);
         
         //create sales for test
         Sale sal1 = new Sale(1,"jpm@gmail.com", "123-456-7890",
-                "street",11111,"1200","Cash", 1, 1, 
+                "street",11111,"1200","Cash", daoUsers.getAllUsers().get(0).getUserID(), daoVehicle.getAllVehicles().get(0).getVehicleID(),
                 march);
         Sale sal2 = new Sale(1,"jpm@gmail.com", "123-456-7890",
-                "street",11111,"1200","Cash", 1, 1, 
+                "street",11111,"1200","Cash", daoUsers.getAllUsers().get(0).getUserID(), daoVehicle.getAllVehicles().get(0).getVehicleID(),
                 june);
         Sale sal3 = new Sale(1,"jpm@gmail.com", "123-456-7890",
-                "street",11111,"1200","Cash", 1, 1, 
+                "street",11111,"1200","Cash", daoUsers.getAllUsers().get(0).getUserID(), daoVehicle.getAllVehicles().get(0).getVehicleID(),
                 july);
         
 //        service.addSale(sal1);
@@ -194,24 +201,24 @@ public class ServiceLayerImplTest {
         //createa dates for test
         LocalDate march = LocalDate.of(2000, Month.MARCH, 1);
         LocalDate june =LocalDate.of(2000, Month.JUNE, 1);
-        LocalDate july = LocalDate.of(2000, 07, 1);
+        LocalDate july = LocalDate.of(2000, Month.JULY, 1);
         
         //create sales for test
         Sale sal1 = new Sale(1,"jpm@gmail.com", "123-456-7890",
-                "street",11111,"1200","Cash", 1, 1, 
+                "street",11111,"1200","Cash", daoUsers.getAllUsers().get(0).getUserID(), daoVehicle.getAllVehicles().get(0).getVehicleID(),
                 march);
         Sale sal2 = new Sale(1,"jpm@gmail.com", "123-456-7890",
-                "street",11111,"1200","Cash", 1, 1, 
+                "street",11111,"1200","Cash", daoUsers.getAllUsers().get(0).getUserID(), daoVehicle.getAllVehicles().get(0).getVehicleID(),
                 june);
         Sale sal3 = new Sale(1,"jpm@gmail.com", "123-456-7890",
-                "street",11111,"1200","Cash", 1, 1, 
+                "street",11111,"1200","Cash", daoUsers.getAllUsers().get(0).getUserID(), daoVehicle.getAllVehicles().get(0).getVehicleID(),
                 july);
         
         daoSales.addSale(sal1);
         daoSales.addSale(sal2);
         daoSales.addSale(sal3);
         
-        User user = service.getUser(1);
+        User user = service.getUser(daoUsers.getAllUsers().get(0).getUserID());
         User userFake = new User(2,"sir-fizzle-jam", "jazz jam", "nota realuser","icanconfirmthat","imposter");
         service.addUser(userFake);
         
@@ -253,7 +260,7 @@ public class ServiceLayerImplTest {
     @Test
     public void testGetSalesInByUser() {
         //Setup users
-        User user = service.getUser(1);
+        User user = service.getUser(daoUsers.getAllUsers().get(0).getUserID());
         User userFake = new User(2,"sir-fizzle-jam", "jazz jam", "nota realuser","icanconfirmthat","imposter");
         service.addUser(userFake);
         
@@ -264,17 +271,17 @@ public class ServiceLayerImplTest {
           //createa dates for test
         LocalDate march = LocalDate.of(2000, Month.MARCH, 1);
         LocalDate june =LocalDate.of(2000, Month.JUNE, 1);
-        LocalDate july = LocalDate.of(2000, 07, 1);
+        LocalDate july = LocalDate.of(2000, Month.JULY, 1);
         
         //create sales for test
         Sale sal1 = new Sale(1,"jpm@gmail.com", "123-456-7890",
-                "street",11111,"1200","Cash", 1, 1, 
+                "street",11111,"1200","Cash", daoUsers.getAllUsers().get(0).getUserID(), daoVehicle.getAllVehicles().get(0).getVehicleID(),
                 march);
         Sale sal2 = new Sale(1,"jpm@gmail.com", "123-456-7890",
-                "street",11111,"1200","Cash", 1, 1, 
+                "street",11111,"1200","Cash", daoUsers.getAllUsers().get(0).getUserID(), daoVehicle.getAllVehicles().get(0).getVehicleID(),
                 june);
         Sale sal3 = new Sale(1,"jpm@gmail.com", "123-456-7890",
-                "street",11111,"1200","Cash", 1, 1, 
+                "street",11111,"1200","Cash", daoUsers.getAllUsers().get(0).getUserID(), daoVehicle.getAllVehicles().get(0).getVehicleID(),
                 july);
         
         daoSales.addSale(sal1);
@@ -300,17 +307,17 @@ public class ServiceLayerImplTest {
         //createa dates for test
         LocalDate march = LocalDate.of(2000, Month.MARCH, 1);
         LocalDate june =LocalDate.of(2000, Month.JUNE, 1);
-        LocalDate july = LocalDate.of(2000, 07, 1);
+        LocalDate july = LocalDate.of(2000, Month.JULY, 1);
         
         //create sales for test
         Sale sal1 = new Sale(1,"jpm@gmail.com", "123-456-7890",
-                "street",11111,"1200","Cash", 1, 1, 
+                "street",11111,"1200","Cash", daoUsers.getAllUsers().get(0).getUserID(), daoVehicle.getAllVehicles().get(0).getVehicleID(),
                 march);
         Sale sal2 = new Sale(1,"jpm@gmail.com", "123-456-7890",
-                "street",11111,"1200","Cash", 1, 1, 
+                "street",11111,"1200","Cash", daoUsers.getAllUsers().get(0).getUserID(), daoVehicle.getAllVehicles().get(0).getVehicleID(),
                 june);
         Sale sal3 = new Sale(1,"jpm@gmail.com", "123-456-7890",
-                "street",11111,"1200","Cash", 1, 1, 
+                "street",11111,"1200","Cash", daoUsers.getAllUsers().get(0).getUserID(), daoVehicle.getAllVehicles().get(0).getVehicleID(),
                 july);
         
         daoSales.addSale(sal1);
@@ -337,7 +344,7 @@ public class ServiceLayerImplTest {
         
         //create sales for test
         Sale sal1 = new Sale(1,"jpm@gmail.com", "123-456-7890",
-                "street",11111,"1200","Cash", 1, 1, 
+                "street",11111,"1200","Cash", daoUsers.getAllUsers().get(0).getUserID(), daoVehicle.getAllVehicles().get(0).getVehicleID(),
                 march);
         
         //sale purchase price is less than 14000
@@ -345,7 +352,7 @@ public class ServiceLayerImplTest {
         
         //create sales for test
         Sale sal2 = new Sale(1,"jpm@gmail.com", "123-456-7890",
-                "street",11111,"14000","Cash", 1, 1, 
+                "street",11111,"14000","Cash", daoUsers.getAllUsers().get(0).getUserID(), daoVehicle.getAllVehicles().get(0).getVehicleID(),
                 march);
         
         //sale is valid
@@ -353,7 +360,7 @@ public class ServiceLayerImplTest {
         
         //create sales for test with purchase price greater than MSRP
         Sale sal3 = new Sale(1,"jpm@gmail.com", "123-456-7890",
-                "street",11111,"17000","Cash", 1, 1, 
+                "street",11111,"17000","Cash", daoUsers.getAllUsers().get(0).getUserID(), daoVehicle.getAllVehicles().get(0).getVehicleID(),
                 march);
         
         assertFalse(service.validPurchasePrice(sal3),"should be false: msrp < pPrice");
@@ -367,20 +374,20 @@ public class ServiceLayerImplTest {
         //createa dates for test
         LocalDate march = LocalDate.of(2000, Month.MARCH, 1);
         LocalDate june =LocalDate.of(2000, Month.JUNE, 1);
-        LocalDate july = LocalDate.of(2000, 07, 1);
+        LocalDate july = LocalDate.of(2000, Month.JULY, 1);
         
         //create sales for test
         //valid zip
         Sale sal1 = new Sale(1,"jpm@gmail.com", "123-456-7890",
-                "street",11111,"1200","Cash", 1, 1, 
+                "street",11111,"1200","Cash", daoUsers.getAllUsers().get(0).getUserID(), daoVehicle.getAllVehicles().get(0).getVehicleID(),
                 march);
         //invalid zip
         Sale sal2 = new Sale(1,"jpm@gmail.com", "123-456-7890",
-                "street",11,"1200","Cash", 1, 1, 
+                "street",11,"1200","Cash", daoUsers.getAllUsers().get(0).getUserID(), daoVehicle.getAllVehicles().get(0).getVehicleID(),
                 june);
         //invalid zip
         Sale sal3 = new Sale(1,"jpm@gmail.com", "123-456-7890",
-                "street",1111122,"1200","Cash", 1, 1, 
+                "street",1111122,"1200","Cash", daoUsers.getAllUsers().get(0).getUserID(), daoVehicle.getAllVehicles().get(0).getVehicleID(),
                 july);
         
         daoSales.addSale(sal1);
@@ -398,9 +405,9 @@ public class ServiceLayerImplTest {
     @Test
     public void testValidYear() {
         //valid year
-        Vehicle valid = service.getVehicle(1);
+        Vehicle valid = service.getVehicle(daoVehicle.getAllVehicles().get(0).getVehicleID());
         //invalid year
-        Vehicle invalid = service.getVehicle(2);
+        Vehicle invalid = service.getVehicle(daoVehicle.getAllVehicles().get(1).getVehicleID());
         
         assertTrue(service.validYear(valid));
         assertFalse(service.validYear(invalid));
@@ -412,9 +419,9 @@ public class ServiceLayerImplTest {
     @Test
     public void testValidTransmission() {
         //valid transmission
-        Vehicle valid = service.getVehicle(1);
+        Vehicle valid = service.getVehicle(daoVehicle.getAllVehicles().get(0).getVehicleID());
         //invalid transmission
-        Vehicle invalid = service.getVehicle(2);
+        Vehicle invalid = service.getVehicle(daoVehicle.getAllVehicles().get(1).getVehicleID());
         
         assertTrue(service.validTransmission(valid));
         assertFalse(service.validTransmission(invalid));
@@ -426,9 +433,9 @@ public class ServiceLayerImplTest {
     @Test
     public void testValidNewVehicle() {
         //valid new vehicle
-        Vehicle valid = service.getVehicle(1);
+        Vehicle valid = service.getVehicle(daoVehicle.getAllVehicles().get(0).getVehicleID());
         //invalid new vehicle
-        Vehicle invalid = service.getVehicle(2);
+        Vehicle invalid = service.getVehicle(daoVehicle.getAllVehicles().get(1).getVehicleID());
         
         assertTrue(service.validNewVehicle(valid));
         assertFalse(service.validNewVehicle(invalid));
@@ -440,9 +447,9 @@ public class ServiceLayerImplTest {
     @Test
     public void testValidSalePrice() {
         //valid sale price
-        Vehicle valid = service.getVehicle(1);
+        Vehicle valid = service.getVehicle(daoVehicle.getAllVehicles().get(0).getVehicleID());
         //invalid sale price
-        Vehicle invalid = service.getVehicle(2);
+        Vehicle invalid = service.getVehicle(daoVehicle.getAllVehicles().get(1).getVehicleID());
         
         assertTrue(service.validSalePrice(valid));
         assertFalse(service.validSalePrice(invalid));
@@ -471,20 +478,20 @@ public class ServiceLayerImplTest {
         //createa dates for test
         LocalDate march = LocalDate.of(2000, Month.MARCH, 1);
         LocalDate june =LocalDate.of(2000, Month.JUNE, 1);
-        LocalDate july = LocalDate.of(2000, 07, 1);
+        LocalDate july = LocalDate.of(2000, Month.JULY, 1);
         
         //create sales for test
         //valid type
         Sale sal1 = new Sale(1,"jpm@gmail.com", "123-456-7890",
-                "street",11111,"1200","Cash", 1, 1, 
+                "street",11111,"1200","Cash", daoUsers.getAllUsers().get(0).getUserID(), daoVehicle.getAllVehicles().get(0).getVehicleID(),
                 march);
         //valid type
         Sale sal2 = new Sale(1,"jpm@gmail.com", "123-456-7890",
-                "street",11111,"1200","nothing", 1, 1, 
+                "street",11111,"1200","nothing", daoUsers.getAllUsers().get(0).getUserID(), daoVehicle.getAllVehicles().get(0).getVehicleID(),
                 june);
         //valid type
         Sale sal3 = new Sale(1,"jpm@gmail.com", "123-456-7890",
-                "street",11111,"1200","loan", 1, 1, 
+                "street",11111,"1200","loan", daoUsers.getAllUsers().get(0).getUserID(), daoVehicle.getAllVehicles().get(0).getVehicleID(),
                 july);
        
         
@@ -500,9 +507,9 @@ public class ServiceLayerImplTest {
     public void testValidVehicleForSale() {
         
         //valid sale price
-        Vehicle valid = service.getVehicle(2);
+        Vehicle valid = service.getVehicle(daoVehicle.getAllVehicles().get(1).getVehicleID());
         //invalid sale price
-        Vehicle invalid = service.getVehicle(1);
+        Vehicle invalid = service.getVehicle(daoVehicle.getAllVehicles().get(0).getVehicleID());
         
         assertTrue(service.validVehicleForSale(valid.getVehicleID()));
         assertFalse(service.validVehicleForSale(invalid.getVehicleID()));
@@ -517,9 +524,9 @@ public class ServiceLayerImplTest {
         List<Vehicle> sold = service.getInventoryIndex();
         
         //get vehicles in database
-        Vehicle v1 = service.getVehicle(1);
-        Vehicle v2 = service.getVehicle(2);
-        Vehicle v3 = service.getVehicle(3);
+        Vehicle v1 = service.getVehicle(daoVehicle.getAllVehicles().get(0).getVehicleID());
+        Vehicle v2 = service.getVehicle(daoVehicle.getAllVehicles().get(1).getVehicleID());
+        Vehicle v3 = service.getVehicle(daoVehicle.getAllVehicles().get(2).getVehicleID());
         
         assertEquals(2, sold.size());
         //should not contain 1
