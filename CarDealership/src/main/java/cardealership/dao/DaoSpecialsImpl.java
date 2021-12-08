@@ -6,7 +6,6 @@ import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.sql.Statement;
-import java.util.List;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.jdbc.core.JdbcTemplate;
 import org.springframework.jdbc.core.RowMapper;
@@ -45,21 +44,13 @@ public class DaoSpecialsImpl implements DaoSpecials {
 
     @Override
     public boolean removeSpecial(int specialId) {
-         final String sql = "DELETE FROM specials WHERE specialID = ?";
-        return jdbc.update(sql, specialId) > 0;
+        throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
     }
 
     @Override
     public Special getSpecial(int specialId) {
         final String sql = "SELECT specialID, startDate, endDate, discount FROM Specials WHERE specialID = ?";
         return jdbc.queryForObject(sql, new SpecialMapper(), specialId);
-    }
-    
-    @Override
-    public List<Special> getAllSpecials() {
-        
-        final String sql = "SELECT specialID, startDate, endDate, discount FROM specials";
-        return jdbc.query(sql, new SpecialMapper());
     }
     
     private static final class SpecialMapper implements RowMapper<Special> {

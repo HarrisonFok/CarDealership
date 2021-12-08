@@ -6,7 +6,6 @@
 package cardealership.dao;
 
 import cardealership.dto.Special;
-import java.util.List;
 
 /**
  *
@@ -19,7 +18,5 @@ public interface DaoSpecials {
     public boolean removeSpecial(int specialId);
     
     public Special getSpecial(int specialId);
-    
-    public List<Special> getAllSpecials() ;
     
 }
