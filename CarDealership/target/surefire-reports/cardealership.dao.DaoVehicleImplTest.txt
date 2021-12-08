@@ -1,0 +1,4 @@
+-------------------------------------------------------------------------------
+Test set: cardealership.dao.DaoVehicleImplTest
+-------------------------------------------------------------------------------
+Tests run: 11, Failures: 0, Errors: 0, Skipped: 0, Time elapsed: 20.133 s - in cardealership.dao.DaoVehicleImplTest

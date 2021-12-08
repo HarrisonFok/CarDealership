@@ -1,5 +1,5 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<testsuite xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:noNamespaceSchemaLocation="https://maven.apache.org/surefire/maven-surefire-plugin/xsd/surefire-test-report.xsd" name="cardealership.servicelayer.ServiceLayerImplTest" time="40.535" tests="14" errors="0" skipped="0" failures="0">
+<testsuite xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:noNamespaceSchemaLocation="https://maven.apache.org/surefire/maven-surefire-plugin/xsd/surefire-test-report.xsd" name="cardealership.dao.DaoContactTest" time="19.228" tests="2" errors="0" skipped="0" failures="0">
   <properties>
     <property name="sun.desktop" value="windows"/>
     <property name="awt.toolkit" value="sun.awt.windows.WToolkit"/>
@@ -61,18 +61,6 @@
     <property name="sun.io.unicode.encoding" value="UnicodeLittle"/>
     <property name="java.class.version" value="55.0"/>
   </properties>
-  <testcase name="testCheckIfValidPurchasePrice" classname="cardealership.servicelayer.ServiceLayerImplTest" time="3.34"/>
-  <testcase name="testValidNewVehicle" classname="cardealership.servicelayer.ServiceLayerImplTest" time="3.19"/>
-  <testcase name="testValidEmail" classname="cardealership.servicelayer.ServiceLayerImplTest" time="1.202"/>
-  <testcase name="testValidZip" classname="cardealership.servicelayer.ServiceLayerImplTest" time="1.543"/>
-  <testcase name="testValidTransmission" classname="cardealership.servicelayer.ServiceLayerImplTest" time="2.655"/>
-  <testcase name="testValidYear" classname="cardealership.servicelayer.ServiceLayerImplTest" time="1.94"/>
-  <testcase name="testValidVehicleForSale" classname="cardealership.servicelayer.ServiceLayerImplTest" time="2.25"/>
-  <testcase name="testTotalOfSales" classname="cardealership.servicelayer.ServiceLayerImplTest" time="3.765"/>
-  <testcase name="testGetSalesInRangeAndUser" classname="cardealership.servicelayer.ServiceLayerImplTest" time="4.483"/>
-  <testcase name="testGetSalesInByUser" classname="cardealership.servicelayer.ServiceLayerImplTest" time="3.075"/>
-  <testcase name="testGetSalesInRange" classname="cardealership.servicelayer.ServiceLayerImplTest" time="2.435"/>
-  <testcase name="testValidSalePrice" classname="cardealership.servicelayer.ServiceLayerImplTest" time="4.725"/>
-  <testcase name="testGetInventoryIndex" classname="cardealership.servicelayer.ServiceLayerImplTest" time="4.213"/>
-  <testcase name="testValidPurchaseType" classname="cardealership.servicelayer.ServiceLayerImplTest" time="1.697"/>
+  <testcase name="testEditContact" classname="cardealership.dao.DaoContactTest" time="12.66"/>
+  <testcase name="testAddGetContact" classname="cardealership.dao.DaoContactTest" time="2.633"/>
 </testsuite>

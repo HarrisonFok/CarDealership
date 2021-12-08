@@ -1,0 +1,4 @@
+-------------------------------------------------------------------------------
+Test set: cardealership.dao.DaoContactTest
+-------------------------------------------------------------------------------
+Tests run: 2, Failures: 0, Errors: 0, Skipped: 0, Time elapsed: 19.228 s - in cardealership.dao.DaoContactTest

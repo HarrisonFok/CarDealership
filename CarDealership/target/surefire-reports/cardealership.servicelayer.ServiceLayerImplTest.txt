@@ -1,4 +1,4 @@
 -------------------------------------------------------------------------------
 Test set: cardealership.servicelayer.ServiceLayerImplTest
 -------------------------------------------------------------------------------
-Tests run: 14, Failures: 0, Errors: 0, Skipped: 0, Time elapsed: 11.464 s - in cardealership.servicelayer.ServiceLayerImplTest
+Tests run: 14, Failures: 0, Errors: 0, Skipped: 0, Time elapsed: 40.535 s - in cardealership.servicelayer.ServiceLayerImplTest

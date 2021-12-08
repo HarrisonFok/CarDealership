@@ -1,1 +1,7 @@
-cardealership\servicelayer\ServiceLayerImplTest.class
+cardealership\dao\DaoUsersImplTest.class
+cardealership\dao\DaoModelImplTest.class
+cardealership\dao\DaoMakeTest.class
+cardealership\dao\DaoSalesImplTest.class
+cardealership\dao\DaoSpecialsImplTest.class
+cardealership\dao\DaoVehicleImplTest.class
+cardealership\dao\DaoContactTest.class
