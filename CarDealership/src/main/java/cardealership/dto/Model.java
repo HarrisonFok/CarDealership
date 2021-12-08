@@ -12,6 +12,12 @@ public class Model {
     private String vehicleModel;
     private int makeID;
 
+    public Model(int modelID, String vehicleModel, int makeID) {
+        this.modelID = modelID;
+        this.vehicleModel = vehicleModel;
+        this.makeID = makeID;
+    }
+
     public Model(){
         
     }

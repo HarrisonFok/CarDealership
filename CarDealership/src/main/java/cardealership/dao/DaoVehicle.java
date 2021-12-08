@@ -37,5 +37,6 @@ public interface DaoVehicle {
     public List<Vehicle> getAllVehiclesByMake(int makeId);
     
     public List<Vehicle> getAllVehiclesByYear(int year);
-    
+
+    List<Vehicle> getAllVehicles();
 }

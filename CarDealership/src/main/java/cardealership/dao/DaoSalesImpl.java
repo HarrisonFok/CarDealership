@@ -67,8 +67,8 @@ public class DaoSalesImpl implements DaoSales {
     }
     
     @Override
-    public boolean deleteSaleById(int saleID){
-        final String sql = "DELETE FROM sales WHERE saleID = ?";
+    public boolean removeSale(int saleID) {
+         final String sql = "DELETE FROM sales WHERE saleID = ?";
         return jdbc.update(sql, saleID) > 0;
     }
     

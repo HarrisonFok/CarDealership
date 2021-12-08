@@ -19,5 +19,6 @@ public interface DaoModel {
     public List<Model> getAllModels();
     
     public Model addModel(Model newModel);
-    
+
+    boolean removeModel(int modelID);
 }

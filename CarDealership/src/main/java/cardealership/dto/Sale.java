@@ -25,10 +25,7 @@ public class Sale {
         
     }
 
-    public Sale(int saleID, String email, String phone, 
-            String street, int zipCode, 
-            String purchasePrice, String purchaseType, 
-            int userID, int vehicleID, LocalDate saleDate) {
+    public Sale(int saleID, String email, String phone, String street, int zipCode, String purchasePrice, String purchaseType, int userID, int vehicleID, LocalDate saleDate) {
         this.saleID = saleID;
         this.email = email;
         this.phone = phone;

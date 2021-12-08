@@ -22,8 +22,7 @@ public interface DaoUsers {
     
     public User getUser(int userId);
     
-    public boolean deleteUserById(int userID);
-    
     public List<User> getAllUsers();
-    
+
+    boolean removeUser(int userID);
 }

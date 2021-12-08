@@ -13,15 +13,17 @@ import cardealership.dao.DaoSalesImpl;
 import cardealership.dao.DaoSpecialsImpl;
 import cardealership.dao.DaoUsersImpl;
 import cardealership.dao.DaoVehicleImpl;
-import cardealership.dto.Contact;
+import cardealership.dto.Make;
+import cardealership.dto.Model;
 import cardealership.dto.Sale;
+import cardealership.dto.Special;
 import cardealership.dto.User;
 import cardealership.dto.Vehicle;
 import java.math.BigDecimal;
 import java.time.LocalDate;
 import java.time.Month;
+import java.util.Date;
 import java.util.List;
-import org.junit.jupiter.api.AfterEach;
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertFalse;
 import static org.junit.jupiter.api.Assertions.assertTrue;
@@ -29,6 +31,7 @@ import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
+import org.springframework.jdbc.core.JdbcTemplate;
 
 /**
  *
@@ -37,6 +40,9 @@ import org.springframework.boot.test.context.SpringBootTest;
 //@ExtendWith(MockitoExtension.class)
 @SpringBootTest(classes = TestApplicationConfiguration.class)
 public class ServiceLayerImplTest {
+    
+    @Autowired
+    JdbcTemplate jdbc;
     
     @Autowired
     private DaoContactImpl daoContact;
@@ -64,29 +70,34 @@ public class ServiceLayerImplTest {
 
     @BeforeEach
     public void setUp(){
-        List<Contact> items = daoContact.getAllContacts();
-        for(Contact item : items) {
-            daoContact.deleteContactById(item.getContactID());
-        }
-        
         List<Sale> sales = daoSales.getAllSales();
-        for(Sale item : sales) {
-            daoSales.deleteSaleById(item.getSaleID());
+        for (Sale sale: sales) {
+            daoSales.removeSale(sale.getSaleID());
         }
         
         List<User> users = daoUsers.getAllUsers();
-        for(User item : users) {
-            if(item.getUserID() == 1){
-                continue;
-            }
-            daoUsers.deleteUserById(item.getUserID());
+        for (User user: users) {
+            daoUsers.removeUser(user.getUserID());
         }
+        List<Vehicle> vehicles = daoVehicle.getAllVehicles();
+        for (Vehicle vehicle: vehicles) {
+            daoVehicle.removeVehicle(vehicle.getVehicleID());
+        }
+        List<Model> models = daoModel.getAllModels();
+        for(Model model : models) {
+            daoModel.removeModel(model.getModelID());
+        }
+
+        List<Make> makes = daoMake.getAllMakes();
+        for(Make make : makes) {
+            daoMake.removeMake(make.getMakeID());
+        }
+        
+        
+        
     }
     
-    @AfterEach
-    public void tearDown(){
-
-    }
+        
 
     /**
      * Test of getSalesInRange method, of class ServiceLayerImpl.
@@ -109,6 +120,23 @@ public class ServiceLayerImplTest {
 //    }
     @Test
     public void testGetSalesInRange() {
+        Make make = service.addMake(new Make(1,"Honda"));
+        
+        Model model = service.addModel(new Model(make.getMakeID(),"Fit",make.getMakeID()));
+        Special sp = service.addSpecial(new Special(1,new Date(2000, 5,5),new Date(2000, 5,5), "none"));
+        
+        Vehicle v1 = service.addVehicle(new Vehicle(1, model.getModelID(), "New", "Car", 2021, "Rouge", 300, "12DGS543F",
+			"15000","14000", "new Honda car","Sold", sp.getSpecialID(), "automatic"));
+        Vehicle v2 = service.addVehicle(new Vehicle(1 , model.getModelID(), "new", "truck", 1999, "blue", 643456, "12DGS543F",
+			"5000","10000", "used Honda car","in stock", sp.getSpecialID(), "semi-auto"));
+        Vehicle v3 = service.addVehicle(new Vehicle(1 , model.getModelID(), "used", "mini-van", 2008, "silver", 15450, "12DGS543F",
+			"5000","4000", "used Windstar mini-van","in stock", sp.getSpecialID(), "automatic"));
+
+        User user = new User(1, "Emperor Palpatine", "Evil", "supreme.ruler", "IAmTheSenate", "disabled");
+        service.addUser(user);
+        
+        
+        
         //createa dates for test
         LocalDate march = LocalDate.of(2000, Month.MARCH, 1);
         LocalDate june =LocalDate.of(2000, Month.JUNE, 1);
@@ -116,13 +144,13 @@ public class ServiceLayerImplTest {
         
         //create sales for test
         Sale sal1 = new Sale(1,"jpm@gmail.com", "123-456-7890",
-                "street",11111,"1200","Cash", 1, 1, 
+                "street",11111,"1200","Cash", user.getUserID(), v1.getVehicleID(), 
                 march);
         Sale sal2 = new Sale(1,"jpm@gmail.com", "123-456-7890",
-                "street",11111,"1200","Cash", 1, 1, 
+                "street",11111,"1200","Cash",user.getUserID(), v1.getVehicleID(), 
                 june);
         Sale sal3 = new Sale(1,"jpm@gmail.com", "123-456-7890",
-                "street",11111,"1200","Cash", 1, 1, 
+                "street",11111,"1200","Cash", user.getUserID(), v1.getVehicleID(), 
                 july);
         
 //        service.addSale(sal1);
@@ -166,6 +194,21 @@ public class ServiceLayerImplTest {
      */
     @Test
     public void testGetSalesInRangeAndUser() {
+        Make make = service.addMake(new Make(1,"Honda"));
+        
+        Model model = service.addModel(new Model(make.getMakeID(),"Fit",make.getMakeID()));
+        Special sp = service.addSpecial(new Special(1,new Date(2000, 5,5),new Date(2000, 5,5), "none"));
+        
+        Vehicle v1 = service.addVehicle(new Vehicle(1, model.getModelID(), "New", "Car", 2021, "Rouge", 300, "12DGS543F",
+			"15000","14000", "new Honda car","Sold", sp.getSpecialID(), "automatic"));
+        Vehicle v2 = service.addVehicle(new Vehicle(1 , model.getModelID(), "new", "truck", 1999, "blue", 643456, "12DGS543F",
+			"5000","10000", "used Honda car","in stock", sp.getSpecialID(), "semi-auto"));
+        Vehicle v3 = service.addVehicle(new Vehicle(1 , model.getModelID(), "used", "mini-van", 2008, "silver", 15450, "12DGS543F",
+			"5000","4000", "used Windstar mini-van","in stock", sp.getSpecialID(), "automatic"));
+
+        User user = new User(1, "Emperor Palpatine", "Evil", "supreme.ruler", "IAmTheSenate", "disabled");
+        service.addUser(user);
+        
         //createa dates for test
         LocalDate march = LocalDate.of(2000, Month.MARCH, 1);
         LocalDate june =LocalDate.of(2000, Month.JUNE, 1);
@@ -173,20 +216,20 @@ public class ServiceLayerImplTest {
         
         //create sales for test
         Sale sal1 = new Sale(1,"jpm@gmail.com", "123-456-7890",
-                "street",11111,"1200","Cash", 1, 1, 
+                "street",11111,"1200","Cash", user.getUserID(), v1.getVehicleID(), 
                 march);
         Sale sal2 = new Sale(1,"jpm@gmail.com", "123-456-7890",
-                "street",11111,"1200","Cash", 1, 1, 
+                "street",11111,"1200","Cash", user.getUserID(), v1.getVehicleID(), 
                 june);
         Sale sal3 = new Sale(1,"jpm@gmail.com", "123-456-7890",
-                "street",11111,"1200","Cash", 1, 1, 
+                "street",11111,"1200","Cash", user.getUserID(), v1.getVehicleID(), 
                 july);
         
         daoSales.addSale(sal1);
         daoSales.addSale(sal2);
         daoSales.addSale(sal3);
         
-        User user = service.getUser(1);
+//        User user = service.getUser(1);
         User userFake = new User(2,"sir-fizzle-jam", "jazz jam", "nota realuser","icanconfirmthat","imposter");
         service.addUser(userFake);
         
@@ -227,8 +270,23 @@ public class ServiceLayerImplTest {
      */
     @Test
     public void testGetSalesInByUser() {
+        Make make = service.addMake(new Make(1,"Honda"));
+        
+        Model model = service.addModel(new Model(make.getMakeID(),"Fit",make.getMakeID()));
+        Special sp = service.addSpecial(new Special(1,new Date(2000, 5,5),new Date(2000, 5,5), "none"));
+        
+        Vehicle v1 = service.addVehicle(new Vehicle(1, model.getModelID(), "New", "Car", 2021, "Rouge", 300, "12DGS543F",
+			"15000","14000", "new Honda car","Sold", sp.getSpecialID(), "automatic"));
+        Vehicle v2 = service.addVehicle(new Vehicle(1 , model.getModelID(), "new", "truck", 1999, "blue", 643456, "12DGS543F",
+			"5000","10000", "used Honda car","in stock", sp.getSpecialID(), "semi-auto"));
+        Vehicle v3 = service.addVehicle(new Vehicle(1 , model.getModelID(), "used", "mini-van", 2008, "silver", 15450, "12DGS543F",
+			"5000","4000", "used Windstar mini-van","in stock", sp.getSpecialID(), "automatic"));
+
+        User user = new User(1, "Emperor Palpatine", "Evil", "supreme.ruler", "IAmTheSenate", "disabled");
+        service.addUser(user);
+        
         //Setup users
-        User user = service.getUser(1);
+//        User user = service.getUser(1);
         User userFake = new User(2,"sir-fizzle-jam", "jazz jam", "nota realuser","icanconfirmthat","imposter");
         service.addUser(userFake);
         
@@ -243,13 +301,13 @@ public class ServiceLayerImplTest {
         
         //create sales for test
         Sale sal1 = new Sale(1,"jpm@gmail.com", "123-456-7890",
-                "street",11111,"1200","Cash", 1, 1, 
+                "street",11111,"1200","Cash", user.getUserID(), v1.getVehicleID(), 
                 march);
         Sale sal2 = new Sale(1,"jpm@gmail.com", "123-456-7890",
-                "street",11111,"1200","Cash", 1, 1, 
+                "street",11111,"1200","Cash", user.getUserID(), v1.getVehicleID(), 
                 june);
         Sale sal3 = new Sale(1,"jpm@gmail.com", "123-456-7890",
-                "street",11111,"1200","Cash", 1, 1, 
+                "street",11111,"1200","Cash", user.getUserID(), v1.getVehicleID(), 
                 july);
         
         daoSales.addSale(sal1);
@@ -272,6 +330,21 @@ public class ServiceLayerImplTest {
      */
     @Test
     public void testTotalOfSales() {
+        Make make = service.addMake(new Make(1,"Honda"));
+        
+        Model model = service.addModel(new Model(make.getMakeID(),"Fit",make.getMakeID()));
+        Special sp = service.addSpecial(new Special(1,new Date(2000, 5,5),new Date(2000, 5,5), "none"));
+        
+        Vehicle v1 = service.addVehicle(new Vehicle(1, model.getModelID(), "New", "Car", 2021, "Rouge", 300, "12DGS543F",
+			"15000","14000", "new Honda car","Sold", sp.getSpecialID(), "automatic"));
+        Vehicle v2 = service.addVehicle(new Vehicle(1 , model.getModelID(), "new", "truck", 1999, "blue", 643456, "12DGS543F",
+			"5000","10000", "used Honda car","in stock", sp.getSpecialID(), "semi-auto"));
+        Vehicle v3 = service.addVehicle(new Vehicle(1 , model.getModelID(), "used", "mini-van", 2008, "silver", 15450, "12DGS543F",
+			"5000","4000", "used Windstar mini-van","in stock", sp.getSpecialID(), "automatic"));
+
+        User user = new User(1, "Emperor Palpatine", "Evil", "supreme.ruler", "IAmTheSenate", "disabled");
+        service.addUser(user);
+        
         //createa dates for test
         LocalDate march = LocalDate.of(2000, Month.MARCH, 1);
         LocalDate june =LocalDate.of(2000, Month.JUNE, 1);
@@ -279,13 +352,13 @@ public class ServiceLayerImplTest {
         
         //create sales for test
         Sale sal1 = new Sale(1,"jpm@gmail.com", "123-456-7890",
-                "street",11111,"1200","Cash", 1, 1, 
+                "street",11111,"1200","Cash", user.getUserID(), v1.getVehicleID(), 
                 march);
         Sale sal2 = new Sale(1,"jpm@gmail.com", "123-456-7890",
-                "street",11111,"1200","Cash", 1, 1, 
+                "street",11111,"1200","Cash",user.getUserID(), v1.getVehicleID(), 
                 june);
         Sale sal3 = new Sale(1,"jpm@gmail.com", "123-456-7890",
-                "street",11111,"1200","Cash", 1, 1, 
+                "street",11111,"1200","Cash", user.getUserID(), v1.getVehicleID(), 
                 july);
         
         daoSales.addSale(sal1);
@@ -307,12 +380,27 @@ public class ServiceLayerImplTest {
      */
     @Test
     public void testCheckIfValidPurchasePrice() {
+        Make make = service.addMake(new Make(1,"Honda"));
+        
+        Model model = service.addModel(new Model(make.getMakeID(),"Fit",make.getMakeID()));
+        Special sp = service.addSpecial(new Special(1,new Date(2000, 5,5),new Date(2000, 5,5), "none"));
+        
+        Vehicle v1 = service.addVehicle(new Vehicle(1, model.getModelID(), "New", "Car", 2021, "Rouge", 300, "12DGS543F",
+			"15000","14000", "new Honda car","Sold", sp.getSpecialID(), "automatic"));
+        Vehicle v2 = service.addVehicle(new Vehicle(1 , model.getModelID(), "new", "truck", 1999, "blue", 643456, "12DGS543F",
+			"5000","10000", "used Honda car","in stock", sp.getSpecialID(), "semi-auto"));
+        Vehicle v3 = service.addVehicle(new Vehicle(1 , model.getModelID(), "used", "mini-van", 2008, "silver", 15450, "12DGS543F",
+			"5000","4000", "used Windstar mini-van","in stock", sp.getSpecialID(), "automatic"));
+
+        User user = new User(1, "Emperor Palpatine", "Evil", "supreme.ruler", "IAmTheSenate", "disabled");
+        service.addUser(user);
+        
         //createa dates for test
         LocalDate march = LocalDate.of(2000, Month.MARCH, 1);
         
         //create sales for test
         Sale sal1 = new Sale(1,"jpm@gmail.com", "123-456-7890",
-                "street",11111,"1200","Cash", 1, 1, 
+                "street",11111,"1200","Cash", user.getUserID(), v1.getVehicleID(), 
                 march);
         
         //sale purchase price is less than 14000
@@ -320,7 +408,7 @@ public class ServiceLayerImplTest {
         
         //create sales for test
         Sale sal2 = new Sale(1,"jpm@gmail.com", "123-456-7890",
-                "street",11111,"14000","Cash", 1, 1, 
+                "street",11111,"14000","Cash", user.getUserID(), v1.getVehicleID(), 
                 march);
         
         //sale is valid
@@ -328,7 +416,7 @@ public class ServiceLayerImplTest {
         
         //create sales for test with purchase price greater than MSRP
         Sale sal3 = new Sale(1,"jpm@gmail.com", "123-456-7890",
-                "street",11111,"17000","Cash", 1, 1, 
+                "street",11111,"17000","Cash", user.getUserID(), v1.getVehicleID(), 
                 march);
         
         assertFalse(service.validPurchasePrice(sal3),"should be false: msrp < pPrice");
@@ -339,6 +427,21 @@ public class ServiceLayerImplTest {
      */
     @Test
     public void testValidZip() {
+        Make make = service.addMake(new Make(1,"Honda"));
+        
+        Model model = service.addModel(new Model(make.getMakeID(),"Fit",make.getMakeID()));
+        Special sp = service.addSpecial(new Special(1,new Date(2000, 5,5),new Date(2000, 5,5), "none"));
+        
+        Vehicle v1 = service.addVehicle(new Vehicle(1, model.getModelID(), "New", "Car", 2021, "Rouge", 300, "12DGS543F",
+			"15000","14000", "new Honda car","Sold", sp.getSpecialID(), "automatic"));
+        Vehicle v2 = service.addVehicle(new Vehicle(1 , model.getModelID(), "new", "truck", 1999, "blue", 643456, "12DGS543F",
+			"5000","10000", "used Honda car","in stock", sp.getSpecialID(), "semi-auto"));
+        Vehicle v3 = service.addVehicle(new Vehicle(1 , model.getModelID(), "used", "mini-van", 2008, "silver", 15450, "12DGS543F",
+			"5000","4000", "used Windstar mini-van","in stock", sp.getSpecialID(), "automatic"));
+
+        User user = new User(1, "Emperor Palpatine", "Evil", "supreme.ruler", "IAmTheSenate", "disabled");
+        service.addUser(user);
+        
         //createa dates for test
         LocalDate march = LocalDate.of(2000, Month.MARCH, 1);
         LocalDate june =LocalDate.of(2000, Month.JUNE, 1);
@@ -347,15 +450,15 @@ public class ServiceLayerImplTest {
         //create sales for test
         //valid zip
         Sale sal1 = new Sale(1,"jpm@gmail.com", "123-456-7890",
-                "street",11111,"1200","Cash", 1, 1, 
+                "street",11111,"1200","Cash", user.getUserID(), v1.getVehicleID(), 
                 march);
         //invalid zip
         Sale sal2 = new Sale(1,"jpm@gmail.com", "123-456-7890",
-                "street",11,"1200","Cash", 1, 1, 
+                "street",11,"1200","Cash",user.getUserID(), v1.getVehicleID(), 
                 june);
         //invalid zip
         Sale sal3 = new Sale(1,"jpm@gmail.com", "123-456-7890",
-                "street",1111122,"1200","Cash", 1, 1, 
+                "street",1111122,"1200","Cash",user.getUserID(), v1.getVehicleID(), 
                 july);
         
         daoSales.addSale(sal1);
@@ -372,10 +475,25 @@ public class ServiceLayerImplTest {
      */
     @Test
     public void testValidYear() {
+        Make make = service.addMake(new Make(1,"Honda"));
+        
+        Model model = service.addModel(new Model(make.getMakeID(),"Fit",make.getMakeID()));
+        Special sp = service.addSpecial(new Special(1,new Date(2000, 5,5),new Date(2000, 5,5), "none"));
+        
+        Vehicle v1 = service.addVehicle(new Vehicle(1, model.getModelID(), "New", "Car", 2021, "Rouge", 300, "12DGS543F",
+			"15000","14000", "new Honda car","Sold", sp.getSpecialID(), "automatic"));
+        Vehicle v2 = service.addVehicle(new Vehicle(1 , model.getModelID(), "new", "truck", 1999, "blue", 643456, "12DGS543F",
+			"5000","10000", "used Honda car","in stock", sp.getSpecialID(), "semi-auto"));
+        Vehicle v3 = service.addVehicle(new Vehicle(1 , model.getModelID(), "used", "mini-van", 2008, "silver", 15450, "12DGS543F",
+			"5000","4000", "used Windstar mini-van","in stock", sp.getSpecialID(), "automatic"));
+
+        User user = new User(1, "Emperor Palpatine", "Evil", "supreme.ruler", "IAmTheSenate", "disabled");
+        service.addUser(user);
+        
         //valid year
-        Vehicle valid = service.getVehicle(1);
+        Vehicle valid = service.getVehicle(v1.getVehicleID());
         //invalid year
-        Vehicle invalid = service.getVehicle(2);
+        Vehicle invalid = service.getVehicle(v2.getVehicleID());
         
         assertTrue(service.validYear(valid));
         assertFalse(service.validYear(invalid));
@@ -386,10 +504,25 @@ public class ServiceLayerImplTest {
      */
     @Test
     public void testValidTransmission() {
+        Make make = service.addMake(new Make(1,"Honda"));
+        
+        Model model = service.addModel(new Model(make.getMakeID(),"Fit",make.getMakeID()));
+        Special sp = service.addSpecial(new Special(1,new Date(2000, 5,5),new Date(2000, 5,5), "none"));
+        
+        Vehicle v1 = service.addVehicle(new Vehicle(1, model.getModelID(), "New", "Car", 2021, "Rouge", 300, "12DGS543F",
+			"15000","14000", "new Honda car","Sold", sp.getSpecialID(), "automatic"));
+        Vehicle v2 = service.addVehicle(new Vehicle(1 , model.getModelID(), "new", "truck", 1999, "blue", 643456, "12DGS543F",
+			"5000","10000", "used Honda car","in stock", sp.getSpecialID(), "semi-auto"));
+        Vehicle v3 = service.addVehicle(new Vehicle(1 , model.getModelID(), "used", "mini-van", 2008, "silver", 15450, "12DGS543F",
+			"5000","4000", "used Windstar mini-van","in stock", sp.getSpecialID(), "automatic"));
+
+        User user = new User(1, "Emperor Palpatine", "Evil", "supreme.ruler", "IAmTheSenate", "disabled");
+        service.addUser(user);
+        
         //valid transmission
-        Vehicle valid = service.getVehicle(1);
+        Vehicle valid = service.getVehicle(v1.getVehicleID());
         //invalid transmission
-        Vehicle invalid = service.getVehicle(2);
+        Vehicle invalid = service.getVehicle(v2.getVehicleID());
         
         assertTrue(service.validTransmission(valid));
         assertFalse(service.validTransmission(invalid));
@@ -400,10 +533,25 @@ public class ServiceLayerImplTest {
      */
     @Test
     public void testValidNewVehicle() {
+        Make make = service.addMake(new Make(1,"Honda"));
+        
+        Model model = service.addModel(new Model(make.getMakeID(),"Fit",make.getMakeID()));
+        Special sp = service.addSpecial(new Special(1,new Date(2000, 5,5),new Date(2000, 5,5), "none"));
+        
+        Vehicle v1 = service.addVehicle(new Vehicle(1, model.getModelID(), "New", "Car", 2021, "Rouge", 300, "12DGS543F",
+			"15000","14000", "new Honda car","Sold", sp.getSpecialID(), "automatic"));
+        Vehicle v2 = service.addVehicle(new Vehicle(1 , model.getModelID(), "new", "truck", 1999, "blue", 643456, "12DGS543F",
+			"5000","10000", "used Honda car","in stock", sp.getSpecialID(), "semi-auto"));
+        Vehicle v3 = service.addVehicle(new Vehicle(1 , model.getModelID(), "used", "mini-van", 2008, "silver", 15450, "12DGS543F",
+			"5000","4000", "used Windstar mini-van","in stock", sp.getSpecialID(), "automatic"));
+
+        User user = new User(1, "Emperor Palpatine", "Evil", "supreme.ruler", "IAmTheSenate", "disabled");
+        service.addUser(user);
+        
         //valid new vehicle
-        Vehicle valid = service.getVehicle(1);
+        Vehicle valid = service.getVehicle(v1.getVehicleID());
         //invalid new vehicle
-        Vehicle invalid = service.getVehicle(2);
+        Vehicle invalid = service.getVehicle(v2.getVehicleID());
         
         assertTrue(service.validNewVehicle(valid));
         assertFalse(service.validNewVehicle(invalid));
@@ -414,10 +562,25 @@ public class ServiceLayerImplTest {
      */
     @Test
     public void testValidSalePrice() {
+        Make make = service.addMake(new Make(1,"Honda"));
+        
+        Model model = service.addModel(new Model(make.getMakeID(),"Fit",make.getMakeID()));
+        Special sp = service.addSpecial(new Special(1,new Date(2000, 5,5),new Date(2000, 5,5), "none"));
+        
+        Vehicle v1 = service.addVehicle(new Vehicle(1, model.getModelID(), "New", "Car", 2021, "Rouge", 300, "12DGS543F",
+			"15000","14000", "new Honda car","Sold", sp.getSpecialID(), "automatic"));
+        Vehicle v2 = service.addVehicle(new Vehicle(1 , model.getModelID(), "new", "truck", 1999, "blue", 643456, "12DGS543F",
+			"5000","10000", "used Honda car","in stock", sp.getSpecialID(), "semi-auto"));
+        Vehicle v3 = service.addVehicle(new Vehicle(1 , model.getModelID(), "used", "mini-van", 2008, "silver", 15450, "12DGS543F",
+			"5000","4000", "used Windstar mini-van","in stock", sp.getSpecialID(), "automatic"));
+
+        User user = new User(1, "Emperor Palpatine", "Evil", "supreme.ruler", "IAmTheSenate", "disabled");
+        service.addUser(user);
+        
         //valid sale price
-        Vehicle valid = service.getVehicle(1);
+        Vehicle valid = service.getVehicle(v1.getVehicleID());
         //invalid sale price
-        Vehicle invalid = service.getVehicle(2);
+        Vehicle invalid = service.getVehicle(v2.getVehicleID());
         
         assertTrue(service.validSalePrice(valid));
         assertFalse(service.validSalePrice(invalid));
@@ -473,11 +636,25 @@ public class ServiceLayerImplTest {
      */
     @Test
     public void testValidVehicleForSale() {
+        Make make = service.addMake(new Make(1,"Honda"));
+        
+        Model model = service.addModel(new Model(make.getMakeID(),"Fit",make.getMakeID()));
+        Special sp = service.addSpecial(new Special(1,new Date(2000, 5,5),new Date(2000, 5,5), "none"));
+        
+        Vehicle v1 = service.addVehicle(new Vehicle(1, model.getModelID(), "New", "Car", 2021, "Rouge", 300, "12DGS543F",
+			"15000","14000", "new Honda car","Sold", sp.getSpecialID(), "automatic"));
+        Vehicle v2 = service.addVehicle(new Vehicle(1 , model.getModelID(), "new", "truck", 1999, "blue", 643456, "12DGS543F",
+			"5000","10000", "used Honda car","in stock", sp.getSpecialID(), "semi-auto"));
+        Vehicle v3 = service.addVehicle(new Vehicle(1 , model.getModelID(), "used", "mini-van", 2008, "silver", 15450, "12DGS543F",
+			"5000","4000", "used Windstar mini-van","in stock", sp.getSpecialID(), "automatic"));
+
+        User user = new User(1, "Emperor Palpatine", "Evil", "supreme.ruler", "IAmTheSenate", "disabled");
+        service.addUser(user);
         
         //valid sale price
-        Vehicle valid = service.getVehicle(2);
+        Vehicle valid = service.getVehicle(v2.getVehicleID());
         //invalid sale price
-        Vehicle invalid = service.getVehicle(1);
+        Vehicle invalid = service.getVehicle(v1.getVehicleID());
         
         assertTrue(service.validVehicleForSale(valid.getVehicleID()));
         assertFalse(service.validVehicleForSale(invalid.getVehicleID()));
@@ -488,13 +665,28 @@ public class ServiceLayerImplTest {
      */
     @Test
     public void testGetInventoryIndex() {
+        Make make = service.addMake(new Make(1,"Honda"));
+        
+        Model model = service.addModel(new Model(make.getMakeID(),"Fit",make.getMakeID()));
+        Special sp = service.addSpecial(new Special(1,new Date(2000, 5,5),new Date(2000, 5,5), "none"));
+        
+        Vehicle v1 = service.addVehicle(new Vehicle(1, model.getModelID(), "New", "Car", 2021, "Rouge", 300, "12DGS543F",
+			"15000","14000", "new Honda car","Sold", sp.getSpecialID(), "automatic"));
+        Vehicle v2 = service.addVehicle(new Vehicle(1 , model.getModelID(), "new", "truck", 1999, "blue", 643456, "12DGS543F",
+			"5000","10000", "used Honda car","in stock", sp.getSpecialID(), "semi-auto"));
+        Vehicle v3 = service.addVehicle(new Vehicle(1 , model.getModelID(), "used", "mini-van", 2008, "silver", 15450, "12DGS543F",
+			"5000","4000", "used Windstar mini-van","in stock", sp.getSpecialID(), "automatic"));
+
+        User user = new User(1, "Emperor Palpatine", "Evil", "supreme.ruler", "IAmTheSenate", "disabled");
+        service.addUser(user);
+        
         //should get used and new cars
         List<Vehicle> sold = service.getInventoryIndex();
         
-        //get vehicles in database
-        Vehicle v1 = service.getVehicle(1);
-        Vehicle v2 = service.getVehicle(2);
-        Vehicle v3 = service.getVehicle(3);
+//        //get vehicles in database
+//        Vehicle v1 = service.getVehicle(v1.getVehicleID());
+//        Vehicle v2 = service.getVehicle(2);
+//        Vehicle v3 = service.getVehicle(3);
         
         assertEquals(2, sold.size());
         //should not contain 1
