@@ -19,8 +19,7 @@ public interface DaoContact {
     public List<Contact> getAllContacts();
     
     public boolean editContact(Contact newContact);
-
-    boolean removeContact(int contactID);
     
+    public boolean deleteContactById(int id);
     
 }

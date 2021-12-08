@@ -32,7 +32,12 @@ public class Vehicle {
         this.vehicleID = vehicleID;
     }
 
-    public Vehicle(int vehicleID, String make, String vehicleType, String bodyStyle, int vehicleYear, String transmission, String colour, int mileage, String vin, String msrp, String salesPrice, String vehicleDesc, String salesStatus, int specialID, int modelID) {
+    public Vehicle( int vehicleID, int modelID,  
+            String vehicleType, String bodyStyle, 
+            int vehicleYear,  
+            String colour, int mileage, String vin, 
+            String msrp, String salesPrice, String vehicleDesc, 
+            String salesStatus, int specialID, String transmission) {
         this.vehicleID = vehicleID;
 //        this.make = make;
         this.vehicleType = vehicleType;

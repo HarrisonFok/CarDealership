@@ -15,6 +15,12 @@ public class Model {
     public Model(){
         
     }
+
+    public Model(int modelID, String vehicleModel, int makeID) {
+        this.modelID = modelID;
+        this.vehicleModel = vehicleModel;
+        this.makeID = makeID;
+    }
     
     public Model(int modelID, String vehicleModel) {
         this.modelID = modelID;

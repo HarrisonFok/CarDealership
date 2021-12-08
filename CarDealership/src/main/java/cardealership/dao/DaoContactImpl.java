@@ -25,7 +25,7 @@ public class DaoContactImpl implements DaoContact {
 
     @Override
     public Contact addContact(Contact newContact) {
-        final String sql = "INSERT INTO Contact(contactName, message, email, phone, vehicleID) VALUES (?,?,?,?,?)";
+        final String sql = "INSERT INTO Contact(contactID, contactName, message, email, phone, vehicleID) VALUES (?,?,?,?,?,?)";
         GeneratedKeyHolder key = new GeneratedKeyHolder();
         jdbc.update((Connection conn) -> {
             PreparedStatement pState = conn.prepareStatement(sql, Statement.RETURN_GENERATED_KEYS);
@@ -50,13 +50,13 @@ public class DaoContactImpl implements DaoContact {
 
     @Override
     public boolean editContact(Contact newContact) {
-        final String sql = "UPDATE Contact SET "
-                + "contactName = ?,"
-                + "message = ?,"
-                + "email = ?,"
-                + "phone = ?,"
+        final String sql = "UPDATE Contact SET"
+                + "contactName = ?"
+                + "message = ?"
+                + "email = ?"
+                + "phone = ?"
                 + "vehicleID = ?"
-                + " WHERE contactID = ?";
+                + "WHERE contactID = ?";
         return jdbc.update(sql,
                 newContact.getContactName(),
                 newContact.getMessage(),
@@ -65,13 +65,13 @@ public class DaoContactImpl implements DaoContact {
                 newContact.getVehicleID(),
                 newContact.getContactID()) > 0;
     }
-
+    
     @Override
-    public boolean removeContact(int contactID) {
-        final String sql = "DELETE FROM contact WHERE contactID = ?";
-        return jdbc.update(sql, contactID) > 0;
+    public boolean deleteContactById(int id){
+        final String sql = "DELETE FROM Contact WHERE contactID = ?";
+        return jdbc.update(sql, id) > 0;
     }
-
+    
     private static final class ContactMapper implements RowMapper<Contact> {
 
         @Override
